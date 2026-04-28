@@ -1,7 +1,21 @@
 import { getStandings, getActiveSeason, getLeagues } from '@/lib/queries'
 
+interface Team {
+  id: string
+  name: string
+  slug: string
+  logo_url: string | null
+}
+
+interface Match {
+  home_team: Team
+  away_team: Team
+  home_score: number
+  away_score: number
+}
+
 interface StandingsRow {
-  team: { id: string; name: string; slug: string; logo_url: string | null }
+  team: Team
   p: number
   w: number
   d: number
@@ -11,7 +25,7 @@ interface StandingsRow {
   pts: number
 }
 
-function calculateStandings(matches: any[]): StandingsRow[] {
+function calculateStandings(matches: Match[]): StandingsRow[] {
   const table: Record<string, StandingsRow> = {}
 
   for (const match of matches) {
@@ -71,10 +85,32 @@ function calculateStandings(matches: any[]): StandingsRow[] {
   )
 }
 
+async function loadStandingsData() {
+  const leagues = await getLeagues()
+  if (!leagues || leagues.length === 0) {
+    throw new Error('NO_LEAGUES')
+  }
+
+  const league = leagues[0]
+  const season = await getActiveSeason(league.id)
+  if (!season) {
+    throw new Error('NO_SEASON')
+  }
+
+  const matches = await getStandings(season.id)
+  const standings = calculateStandings(matches || [])
+  return standings
+}
+
 export default async function StandingsPage() {
+  let standings: StandingsRow[]
+
   try {
-    const leagues = await getLeagues()
-    if (!leagues || leagues.length === 0) {
+    standings = await loadStandingsData()
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'unknown'
+
+    if (message === 'NO_LEAGUES') {
       return (
         <main className="max-w-3xl mx-auto p-4">
           <h1 className="text-2xl font-bold mb-4">League Standings</h1>
@@ -83,9 +119,7 @@ export default async function StandingsPage() {
       )
     }
 
-    const league = leagues[0]
-    const season = await getActiveSeason(league.id)
-    if (!season) {
+    if (message === 'NO_SEASON') {
       return (
         <main className="max-w-3xl mx-auto p-4">
           <h1 className="text-2xl font-bold mb-4">League Standings</h1>
@@ -94,64 +128,6 @@ export default async function StandingsPage() {
       )
     }
 
-    const matches = await getStandings(season.id)
-    const standings = calculateStandings(matches || [])
-
-    return (
-      <main className="max-w-3xl mx-auto p-4">
-        <h1 className="text-2xl font-bold mb-4">League Standings</h1>
-        <div className="bg-white rounded-lg shadow overflow-hidden">
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="bg-blue-800 text-white">
-                <th className="p-2 text-left">#</th>
-                <th className="p-2 text-left">Team</th>
-                <th className="p-2">P</th>
-                <th className="p-2">W</th>
-                <th className="p-2">D</th>
-                <th className="p-2">L</th>
-                <th className="p-2">GD</th>
-                <th className="p-2">Pts</th>
-              </tr>
-            </thead>
-            <tbody>
-              {standings && standings.length > 0 ? (
-                standings.map((row, i) => (
-                  <tr
-                    key={row.team.id}
-                    className={i % 2 === 0 ? 'bg-white' : 'bg-gray-50'}
-                  >
-                    <td className="p-2 font-bold text-blue-800">{i + 1}</td>
-                    <td className="p-2 font-medium">
-                      <a
-                        href={`/teams/${row.team.slug}`}
-                        className="hover:text-blue-700"
-                      >
-                        {row.team.name}
-                      </a>
-                    </td>
-                    <td className="p-2 text-center">{row.p}</td>
-                    <td className="p-2 text-center">{row.w}</td>
-                    <td className="p-2 text-center">{row.d}</td>
-                    <td className="p-2 text-center">{row.l}</td>
-                    <td className="p-2 text-center">{row.gf - row.ga}</td>
-                    <td className="p-2 text-center font-bold">{row.pts}</td>
-                  </tr>
-                ))
-              ) : (
-                <tr>
-                  <td colSpan={8} className="p-4 text-center text-gray-500">
-                    No completed matches yet
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
-      </main>
-    )
-  } catch (error) {
-    console.error('Error loading standings:', error)
     return (
       <main className="max-w-3xl mx-auto p-4">
         <h1 className="text-2xl font-bold mb-4">League Standings</h1>
@@ -159,4 +135,58 @@ export default async function StandingsPage() {
       </main>
     )
   }
+
+  return (
+    <main className="max-w-3xl mx-auto p-4">
+      <h1 className="text-2xl font-bold mb-4">League Standings</h1>
+      <div className="bg-white rounded-lg shadow overflow-hidden">
+        <table className="w-full text-sm">
+          <thead>
+            <tr className="bg-blue-800 text-white">
+              <th className="p-2 text-left">#</th>
+              <th className="p-2 text-left">Team</th>
+              <th className="p-2">P</th>
+              <th className="p-2">W</th>
+              <th className="p-2">D</th>
+              <th className="p-2">L</th>
+              <th className="p-2">GD</th>
+              <th className="p-2">Pts</th>
+            </tr>
+          </thead>
+          <tbody>
+            {standings && standings.length > 0 ? (
+              standings.map((row, i) => (
+                <tr
+                  key={row.team.id}
+                  className={i % 2 === 0 ? 'bg-white' : 'bg-gray-50'}
+                >
+                  <td className="p-2 font-bold text-blue-800">{i + 1}</td>
+                  <td className="p-2 font-medium">
+                    <a
+                      href={`/teams/${row.team.slug}`}
+                      className="hover:text-blue-700"
+                    >
+                      {row.team.name}
+                    </a>
+                  </td>
+                  <td className="p-2 text-center">{row.p}</td>
+                  <td className="p-2 text-center">{row.w}</td>
+                  <td className="p-2 text-center">{row.d}</td>
+                  <td className="p-2 text-center">{row.l}</td>
+                  <td className="p-2 text-center">{row.gf - row.ga}</td>
+                  <td className="p-2 text-center font-bold">{row.pts}</td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan={8} className="p-4 text-center text-gray-500">
+                  No completed matches yet
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
+    </main>
+  )
 }
