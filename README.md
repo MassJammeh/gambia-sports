@@ -22,6 +22,7 @@ Currently in **Phase 1** with one pilot league fully operational.
 ## 🚀 Getting Started
 
 ### Prerequisites
+
 - Node.js 18+
 - npm or yarn
 - Supabase account (credentials in `.env.local`)
@@ -48,6 +49,7 @@ Open [http://localhost:3000](http://localhost:3000) to see the public home page.
 ### Key Routes
 
 **Public (Anyone can view):**
+
 - `/` — Home page with latest results and fixtures
 - `/standings` — League standings table
 - `/fixtures` — Upcoming matches
@@ -56,6 +58,7 @@ Open [http://localhost:3000](http://localhost:3000) to see the public home page.
 - `/teams/[slug]` — Individual team with squad
 
 **Admin (Login required):**
+
 - `/admin/login` — Admin authentication
 - `/admin` — Admin dashboard
 - `/admin/teams` — Manage teams
@@ -102,6 +105,7 @@ src/
 ## 📊 Features (Phase 1)
 
 ✅ **Public Website**
+
 - League standings with auto-calculated W/D/L/Goals/Points
 - Upcoming fixtures with date, time, venue
 - Completed match results
@@ -110,6 +114,7 @@ src/
 - SEO-optimized pages
 
 ✅ **Admin Dashboard**
+
 - Secure email/password login
 - Team management (add, edit, view)
 - Player management (register per team)
@@ -118,6 +123,7 @@ src/
 - Protected routes with middleware
 
 ✅ **Backend**
+
 - Supabase PostgreSQL database
 - Real-time data sync
 - Row-level security ready
@@ -175,16 +181,19 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_key
 ## 🐛 Troubleshooting
 
 ### Build fails
+
 ```bash
 rm -rf .next && npm install && npm run build
 ```
 
 ### Connection to Supabase fails
+
 - Verify `.env.local` has correct API keys
 - Check Supabase project is active in dashboard
 - Confirm network allows Supabase connections
 
 ### Admin login not working
+
 - Ensure user exists in Supabase Authentication
 - Check email/password is correct
 - Verify cookies/browser storage is enabled
@@ -194,6 +203,7 @@ rm -rf .next && npm install && npm run build
 ## 🤝 Contributing
 
 This is a Tech Palz project. All code changes should:
+
 1. Be committed to GitHub
 2. Follow TypeScript strict mode
 3. Include proper error handling
@@ -210,6 +220,7 @@ Proprietary — Tech Palz 2026
 ## 🎯 Next Phase
 
 Phase 2 (Months 4-7) will add:
+
 - Multi-league support
 - Sports news platform
 - Player statistics and career tracking
