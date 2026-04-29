@@ -1,5 +1,7 @@
 import type { Metadata } from 'next'
 import './globals.css'
+import { Navbar } from '@/components/Navbar'
+import { Footer } from '@/components/Footer'
 
 export const metadata: Metadata = {
   title: 'Gambia Sports Platform',
@@ -13,32 +15,12 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className="bg-gray-100 min-h-screen text-gray-900">
-        <nav className="bg-blue-800 text-white py-3 px-4">
-          <div className="max-w-4xl mx-auto flex items-center justify-between">
-            <a href="/" className="font-bold text-xl">
-              Gambia Sports
-            </a>
-            <div className="flex gap-6 text-sm font-medium">
-              <a href="/standings" className="hover:text-blue-200">
-                Standings
-              </a>
-              <a href="/fixtures" className="hover:text-blue-200">
-                Fixtures
-              </a>
-              <a href="/results" className="hover:text-blue-200">
-                Results
-              </a>
-              <a href="/teams" className="hover:text-blue-200">
-                Teams
-              </a>
-              <a href="/admin" className="hover:text-blue-200">
-                Admin
-              </a>
-            </div>
-          </div>
-        </nav>
-        {children}
+      <body className="bg-gray-100 min-h-screen text-gray-900 flex flex-col">
+        <Navbar />
+        <main className="flex-1">
+          {children}
+        </main>
+        <Footer />
       </body>
     </html>
   )
