@@ -37,10 +37,12 @@ async function loadPageData() {
   return { league, season, results, fixtures, matches, teams }
 }
 
-function calculateStandings(matches: any[], teams: any[]): StandingsData[] {
-  const standingsMap = new Map<string, any>()
+type StandingsRow = Omit<StandingsData, 'position'>
 
-  teams.forEach((team: any) => {
+function calculateStandings(matches: Match[], teams: Team[]): StandingsData[] {
+  const standingsMap = new Map<string, StandingsRow>()
+
+  teams.forEach((team: Team) => {
     standingsMap.set(team.id, {
       team,
       played: 0,
@@ -49,48 +51,52 @@ function calculateStandings(matches: any[], teams: any[]): StandingsData[] {
       lost: 0,
       goalsFor: 0,
       goalsAgainst: 0,
+      goalDifference: 0,
+      points: 0,
     })
   })
 
-  matches.forEach((match: any) => {
+  matches.forEach((match: Match) => {
     const homeTeamId = match.home_team_id
     const awayTeamId = match.away_team_id
+    const homeScore = match.home_score ?? 0
+    const awayScore = match.away_score ?? 0
 
-    const homeStats = standingsMap.get(homeTeamId)
-    const awayStats = standingsMap.get(awayTeamId)
+    const homeStats = homeTeamId ? standingsMap.get(homeTeamId) : undefined
+    const awayStats = awayTeamId ? standingsMap.get(awayTeamId) : undefined
 
     if (homeStats) {
       homeStats.played++
-      homeStats.goalsFor += match.home_score || 0
-      homeStats.goalsAgainst += match.away_score || 0
+      homeStats.goalsFor += homeScore
+      homeStats.goalsAgainst += awayScore
 
-      if (match.home_score > match.away_score) homeStats.won++
-      else if (match.home_score === match.away_score) homeStats.drawn++
+      if (homeScore > awayScore) homeStats.won++
+      else if (homeScore === awayScore) homeStats.drawn++
       else homeStats.lost++
     }
 
     if (awayStats) {
       awayStats.played++
-      awayStats.goalsFor += match.away_score || 0
-      awayStats.goalsAgainst += match.home_score || 0
+      awayStats.goalsFor += awayScore
+      awayStats.goalsAgainst += homeScore
 
-      if (match.away_score > match.home_score) awayStats.won++
-      else if (match.away_score === match.home_score) awayStats.drawn++
+      if (awayScore > homeScore) awayStats.won++
+      else if (awayScore === homeScore) awayStats.drawn++
       else awayStats.lost++
     }
   })
 
   return Array.from(standingsMap.values())
-    .map((row: any) => ({
+    .map((row) => ({
       ...row,
       goalDifference: row.goalsFor - row.goalsAgainst,
       points: row.won * 3 + row.drawn,
     }))
-    .sort((a: any, b: any) => {
+    .sort((a, b) => {
       if (b.points !== a.points) return b.points - a.points
       return b.goalDifference - a.goalDifference
     })
-    .map((row: any, index: number) => ({ ...row, position: index + 1 }))
+    .map((row, index: number) => ({ ...row, position: index + 1 }))
 }
 
 export default async function HomePage() {
@@ -104,7 +110,7 @@ export default async function HomePage() {
     if (message === 'NO_LEAGUES') {
       return (
         <main className="max-w-7xl mx-auto px-4 py-8">
-          <div className="bg-gradient-to-r from-blue-700 to-blue-900 text-white rounded-lg p-12 mb-8 text-center">
+          <div className="bg-linear-to-r from-blue-700 to-blue-900 text-white rounded-lg p-12 mb-8 text-center">
             <h1 className="text-4xl font-bold mb-2">Welcome to Gambia Sports</h1>
             <p className="text-xl text-blue-100">No leagues set up yet</p>
           </div>
@@ -126,7 +132,7 @@ export default async function HomePage() {
     if (message === 'NO_SEASON') {
       return (
         <main className="max-w-7xl mx-auto px-4 py-8">
-          <div className="bg-gradient-to-r from-blue-700 to-blue-900 text-white rounded-lg p-12 mb-8 text-center">
+          <div className="bg-linear-to-r from-blue-700 to-blue-900 text-white rounded-lg p-12 mb-8 text-center">
             <h1 className="text-4xl font-bold mb-2">Gambia Sports</h1>
             <p className="text-xl text-blue-100">No active season</p>
           </div>
@@ -147,7 +153,7 @@ export default async function HomePage() {
 
     return (
       <main className="max-w-7xl mx-auto px-4 py-8">
-        <div className="bg-gradient-to-r from-blue-700 to-blue-900 text-white rounded-lg p-12 mb-8 text-center">
+        <div className="bg-linear-to-r from-blue-700 to-blue-900 text-white rounded-lg p-12 mb-8 text-center">
           <h1 className="text-4xl font-bold">Gambia Sports Platform</h1>
         </div>
         <div className="bg-white text-gray-900 rounded-lg shadow p-8 text-center max-w-2xl mx-auto">
@@ -170,7 +176,7 @@ export default async function HomePage() {
   return (
     <main className="max-w-7xl mx-auto px-4 py-8">
       {/* Hero Banner */}
-      <div className="bg-gradient-to-r from-blue-700 to-blue-900 text-white rounded-lg p-8 md:p-12 mb-8 text-center shadow-lg">
+      <div className="bg-linear-to-r from-blue-700 to-blue-900 text-white rounded-lg p-8 md:p-12 mb-8 text-center shadow-lg">
         <h1 className="text-3xl md:text-4xl font-bold mb-2">{league.name}</h1>
         <p className="text-lg md:text-xl text-blue-100">{season.name}</p>
       </div>

@@ -28,7 +28,7 @@ export function Navbar() {
       <div className="max-w-7xl mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <Link href="/" className="font-bold text-xl md:text-2xl flex-shrink-0">
+          <Link href="/" className="font-bold text-xl md:text-2xl">
             ⚽ Gambia Sports
           </Link>
 
