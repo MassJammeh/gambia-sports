@@ -2,7 +2,7 @@
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'Gambia Sports',
+  title: 'Gambia Sports Platform',
   description: 'Minimal Next.js scaffold with Supabase connection support',
 }
 
