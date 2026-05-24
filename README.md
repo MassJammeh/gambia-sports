@@ -24,9 +24,10 @@ The app is intentionally minimal today. New pages, components, and business logi
 ├── package.json
 ├── package-lock.json
 ├── project_docs/
-│   ├── srs.md
-│   ├── technical_blueprint.md
-│   └── ui_ux_design.md
+│   ├── SRS.md
+│   ├── Blueprint.md
+│   ├── UIDesign.md
+│   └── ImplementationGuide.md
 ├── src/
 │   ├── app/
 │   │   ├── globals.css
@@ -59,9 +60,10 @@ The app is intentionally minimal today. New pages, components, and business logi
 
 This repo uses `project_docs/` as the documentation source for overall architecture and product requirements:
 
-- `project_docs/srs.md` — user stories, business rules, acceptance criteria
-- `project_docs/technical_blueprint.md` — architecture, schema, tech stack, revenue model
-- `project_docs/ui_ux_design.md` — UI patterns, colour palette, components, layouts
+- `project_docs/SRS.md` — user stories, business rules, acceptance criteria
+- `project_docs/Blueprint.md` — architecture, schema, tech stack, revenue model
+- `project_docs/UIDesign.md` — UI patterns, colour palette, components, layouts
+- `project_docs/ImplementationGuide.md` — step-by-step implementation and phase guidance
 
 Also review `CLAUDE.md` before making changes. It explains teamwork conventions and how to avoid unnecessary rewrites.
 
