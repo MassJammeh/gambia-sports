@@ -2,7 +2,7 @@ import { createServerClient } from '@supabase/ssr'
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   let response = NextResponse.next({
     request: {
       headers: request.headers,
@@ -37,7 +37,6 @@ export async function middleware(request: NextRequest) {
 
   const { data: { user } } = await supabase.auth.getUser()
 
-  // If user is not logged in and tries to access /admin (except /admin/login), redirect to login
   if (
     !user &&
     request.nextUrl.pathname.startsWith('/admin') &&
@@ -47,7 +46,6 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(loginUrl)
   }
 
-  // If user is logged in and tries to access /admin/login, redirect to /admin
   if (user && request.nextUrl.pathname === '/admin/login') {
     const adminUrl = new URL('/admin', request.url)
     return NextResponse.redirect(adminUrl)

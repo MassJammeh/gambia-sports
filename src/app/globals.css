@@ -1,13 +1,25 @@
-﻿html,
-body {
-  margin: 0;
-  padding: 0;
-  min-height: 100%;
-  font-family: system-ui, sans-serif;
-  background: #ffffff;
-  color: #000000;
+﻿@import "tailwindcss";
+
+:root {
+  --color-primary: #1A6B3A;
+  --color-primary-dark: #0F4A28;
+  --color-primary-mid: #2D8A50;
+  --color-primary-light: #E8F5EE;
+  --color-red: #C1272D;
+  --color-red-light: #FEE2E2;
+  --color-surface: #F3F4F6;
+  --color-border: #E5E7EB;
+  --color-text: #1F2937;
+  --color-text-dark: #111827;
+  --color-muted: #6B7280;
+  --color-win: #16A34A;
+  --color-draw: #9CA3AF;
+  --color-loss: #DC2626;
+  --color-live: #EF4444;
 }
 
-* {
-  box-sizing: border-box;
+body {
+  background-color: #F3F4F6;
+  color: #1F2937;
+  font-family: Inter, system-ui, sans-serif;
 }

@@ -1,9 +1,13 @@
 ﻿import type { Metadata } from 'next'
+import { Inter } from 'next/font/google'
+import Navbar from '@/components/layout/Navbar'
 import './globals.css'
 
+const inter = Inter({ subsets: ['latin'] })
+
 export const metadata: Metadata = {
-  title: 'Gambia Sports Platform',
-  description: 'Minimal Next.js scaffold with Supabase connection support',
+  title: 'Gambia Sports',
+  description: 'Gambia football leagues, standings, fixtures and results',
 }
 
 export default function RootLayout({
@@ -13,7 +17,12 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body suppressHydrationWarning>{children}</body>
+      <body className={inter.className}>
+        <Navbar />
+        <main className="max-w-6xl mx-auto px-4 py-8">
+          {children}
+        </main>
+      </body>
     </html>
   )
 }
