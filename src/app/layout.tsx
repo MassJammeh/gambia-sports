@@ -1,13 +1,14 @@
 ﻿import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import Navbar from '@/components/layout/Navbar'
+import NewsTicker from '@/components/layout/NewsTicker'
 import './globals.css'
 
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'Gambia Sports',
-  description: 'Gambia football leagues, standings, fixtures and results',
+  title: 'GamFoot — Gambia Sports',
+  description: 'The home of Gambian football — live standings, fixtures and results',
 }
 
 export default function RootLayout({
@@ -19,9 +20,10 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <Navbar />
-        <main className="max-w-6xl mx-auto px-4 py-8">
+        <main className="max-w-6xl mx-auto px-4 py-8 pb-16">
           {children}
         </main>
+        <NewsTicker />
       </body>
     </html>
   )
