@@ -38,18 +38,18 @@ export function calculateStandings(matches: Match[]): StandingRow[] {
     away.played++
 
     // Update goals
-    home.goals_for += home_score
-    home.goals_against += away_score
-    away.goals_for += away_score
-    away.goals_against += home_score
+    home.goals_for += home_score!
+    home.goals_against += away_score!
+    away.goals_for += away_score!
+    away.goals_against += home_score!
 
     // Determine result
-    if (home_score > away_score) {
+    if (home_score! > away_score!) {
       // Home win
       home.won++
       home.points += 3
       away.lost++
-    } else if (home_score < away_score) {
+    } else if (home_score! < away_score!) {
       // Away win
       away.won++
       away.points += 3
