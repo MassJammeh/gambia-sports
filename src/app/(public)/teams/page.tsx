@@ -1,6 +1,6 @@
 import { getActiveLeagues, getCurrentSeason } from '@/lib/queries'
 import { createClient } from '@/lib/supabase/server'
-
+import Link from 'next/link'
 export default async function TeamsPage() {
   const { data: leagues } = await getActiveLeagues()
   const firstLeague = leagues?.[0]
@@ -54,11 +54,12 @@ export default async function TeamsPage() {
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
           {teams.map((team, index) => (
-            <div
-              key={team.id}
-              className="bg-white rounded-2xl overflow-hidden shadow-sm transition-all hover:shadow-lg hover:-translate-y-1"
-              style={{ border: '1px solid #E5E7EB' }}
-            >
+            <Link
+                key={team.id}
+                href={`/teams/${team.slug}`}
+                className="block bg-white rounded-2xl overflow-hidden shadow-sm transition-all hover:shadow-lg hover:-translate-y-1"
+                style={{ border: '1px solid #E5E7EB' }}
+              >
               {/* Card top banner */}
               <div
                 className="h-16 flex items-center justify-center relative"
@@ -112,7 +113,7 @@ export default async function TeamsPage() {
                   </span>
                 </div>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
       )}
