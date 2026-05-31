@@ -74,53 +74,53 @@ export default async function FixturesPage() {
               <div className="space-y-2">
                 {matches?.map((match) => (
                   <div
-                    key={match.id}
-                    className="bg-white rounded-2xl px-6 py-5 flex items-center justify-between shadow-sm transition-all hover:shadow-md hover:-translate-y-0.5"
-                    style={{ border: '1px solid #E5E7EB' }}
-                  >
-                    {/* Home team */}
-                    <div className="flex-1 flex items-center justify-end gap-3">
-                      <span className="font-bold text-base text-right" style={{ color: '#111827' }}>
-                        {(match.home_team as any)?.name}
-                      </span>
-                      <div
-                        className="w-9 h-9 rounded-full flex items-center justify-center text-white font-black text-sm flex-shrink-0"
-                        style={{ background: 'linear-gradient(135deg, #1A6B3A, #2D8A50)' }}
-                      >
-                        {(match.home_team as any)?.name?.charAt(0)}
-                      </div>
-                    </div>
-
-                    {/* VS / Time */}
-                    <div className="mx-6 text-center flex-shrink-0">
-                      <div
-                        className="px-4 py-2 rounded-xl text-sm font-black"
-                        style={{ backgroundColor: '#F3F4F6', color: '#1A6B3A', border: '2px solid #E5E7EB', minWidth: '64px' }}
-                      >
-                        {match.scheduled_at
-                          ? new Date(match.scheduled_at).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })
-                          : 'VS'}
-                      </div>
-                      {match.venue && (
-                        <div className="text-xs mt-1.5 font-medium" style={{ color: '#6B7280' }}>
-                          📍 {match.venue}
+                      key={match.id}
+                      className="bg-white rounded-2xl px-4 py-4 flex items-center justify-between shadow-sm transition-all hover:shadow-md hover:-translate-y-0.5"
+                      style={{ border: '1px solid #E5E7EB' }}
+                    >
+                      {/* Home team */}
+                      <div className="flex-1 flex items-center justify-end gap-2 min-w-0">
+                        <span className="font-bold text-sm text-right truncate" style={{ color: '#111827' }}>
+                          {(match.home_team as any)?.name}
+                        </span>
+                        <div
+                          className="w-8 h-8 rounded-full flex items-center justify-center text-white font-black text-xs flex-shrink-0"
+                          style={{ background: 'linear-gradient(135deg, #1A6B3A, #2D8A50)' }}
+                        >
+                          {(match.home_team as any)?.name?.charAt(0)}
                         </div>
-                      )}
-                    </div>
-
-                    {/* Away team */}
-                    <div className="flex-1 flex items-center justify-start gap-3">
-                      <div
-                        className="w-9 h-9 rounded-full flex items-center justify-center text-white font-black text-sm flex-shrink-0"
-                        style={{ background: 'linear-gradient(135deg, #C1272D, #e03040)' }}
-                      >
-                        {(match.away_team as any)?.name?.charAt(0)}
                       </div>
-                      <span className="font-bold text-base" style={{ color: '#111827' }}>
-                        {(match.away_team as any)?.name}
-                      </span>
+
+                      {/* VS / Time */}
+                      <div className="mx-2 text-center flex-shrink-0">
+                        <div
+                          className="px-2 py-1.5 rounded-xl text-xs font-black"
+                          style={{ backgroundColor: '#F3F4F6', color: '#1A6B3A', border: '2px solid #E5E7EB', minWidth: '52px' }}
+                        >
+                          {match.scheduled_at
+                            ? new Date(match.scheduled_at).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })
+                            : 'VS'}
+                        </div>
+                        {match.venue && (
+                          <div className="text-xs mt-1 hidden sm:block" style={{ color: '#6B7280' }}>
+                            📍 {match.venue}
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Away team */}
+                      <div className="flex-1 flex items-center justify-start gap-2 min-w-0">
+                        <div
+                          className="w-8 h-8 rounded-full flex items-center justify-center text-white font-black text-xs flex-shrink-0"
+                          style={{ background: 'linear-gradient(135deg, #C1272D, #e03040)' }}
+                        >
+                          {(match.away_team as any)?.name?.charAt(0)}
+                        </div>
+                        <span className="font-bold text-sm truncate" style={{ color: '#111827' }}>
+                          {(match.away_team as any)?.name}
+                        </span>
+                      </div>
                     </div>
-                  </div>
                 ))}
               </div>
             </div>

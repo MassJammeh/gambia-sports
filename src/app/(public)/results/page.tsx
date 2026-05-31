@@ -78,70 +78,69 @@ export default async function ResultsPage() {
 
                   return (
                     <div
-                      key={match.id}
-                      className="bg-white rounded-2xl px-6 py-5 flex items-center justify-between shadow-sm transition-all hover:shadow-md hover:-translate-y-0.5"
-                      style={{ border: '1px solid #E5E7EB' }}
-                    >
-                      {/* Home team */}
-                      <div className="flex-1 flex items-center justify-end gap-3">
-                        <span
-                          className="font-bold text-base text-right"
-                          style={{ color: homeWon ? '#111827' : '#6B7280' }}
-                        >
-                          {(match.home_team as any)?.name}
-                        </span>
-                        <div
-                          className="w-9 h-9 rounded-full flex items-center justify-center text-white font-black text-sm flex-shrink-0"
-                          style={{
-                            background: homeWon
-                              ? 'linear-gradient(135deg, #1A6B3A, #2D8A50)'
-                              : 'linear-gradient(135deg, #9CA3AF, #6B7280)',
-                          }}
-                        >
-                          {(match.home_team as any)?.name?.charAt(0)}
+                        key={match.id}
+                        className="bg-white rounded-2xl px-4 py-4 flex items-center justify-between shadow-sm transition-all hover:shadow-md hover:-translate-y-0.5"
+                        style={{ border: '1px solid #E5E7EB' }}
+                      >
+                        {/* Home team */}
+                        <div className="flex-1 flex items-center justify-end gap-2 min-w-0">
+                          <span
+                            className="font-bold text-sm text-right truncate"
+                            style={{ color: homeWon ? '#111827' : '#6B7280' }}
+                          >
+                            {(match.home_team as any)?.name}
+                          </span>
+                          <div
+                            className="w-8 h-8 rounded-full flex items-center justify-center text-white font-black text-xs flex-shrink-0"
+                            style={{
+                              background: homeWon
+                                ? 'linear-gradient(135deg, #1A6B3A, #2D8A50)'
+                                : 'linear-gradient(135deg, #9CA3AF, #6B7280)',
+                            }}
+                          >
+                            {(match.home_team as any)?.name?.charAt(0)}
+                          </div>
                         </div>
-                      </div>
 
-                      {/* Score */}
-                      <div className="mx-6 text-center flex-shrink-0">
-                        <div
-                          className="px-5 py-2 rounded-xl font-black text-xl text-white shadow-md"
-                          style={{
-                            background: 'linear-gradient(135deg, #0F4A28, #1A6B3A)',
-                            minWidth: '80px',
-                            letterSpacing: '0.05em',
-                          }}
-                        >
-                          {homeScore} — {awayScore}
+                        {/* Score */}
+                        <div className="mx-2 text-center flex-shrink-0">
+                          <div
+                            className="px-3 py-1.5 rounded-xl font-black text-base text-white shadow-md"
+                            style={{
+                              background: 'linear-gradient(135deg, #0F4A28, #1A6B3A)',
+                              minWidth: '64px',
+                            }}
+                          >
+                            {homeScore} — {awayScore}
+                          </div>
+                          <div
+                            className="text-xs font-black uppercase tracking-widest mt-1"
+                            style={{ color: '#C1272D' }}
+                          >
+                            FT
+                          </div>
                         </div>
-                        <div
-                          className="text-xs font-black uppercase tracking-widest mt-1.5"
-                          style={{ color: '#C1272D' }}
-                        >
-                          FT
-                        </div>
-                      </div>
 
-                      {/* Away team */}
-                      <div className="flex-1 flex items-center justify-start gap-3">
-                        <div
-                          className="w-9 h-9 rounded-full flex items-center justify-center text-white font-black text-sm flex-shrink-0"
-                          style={{
-                            background: awayWon
-                              ? 'linear-gradient(135deg, #1A6B3A, #2D8A50)'
-                              : 'linear-gradient(135deg, #9CA3AF, #6B7280)',
-                          }}
-                        >
-                          {(match.away_team as any)?.name?.charAt(0)}
+                        {/* Away team */}
+                        <div className="flex-1 flex items-center justify-start gap-2 min-w-0">
+                          <div
+                            className="w-8 h-8 rounded-full flex items-center justify-center text-white font-black text-xs flex-shrink-0"
+                            style={{
+                              background: awayWon
+                                ? 'linear-gradient(135deg, #1A6B3A, #2D8A50)'
+                                : 'linear-gradient(135deg, #9CA3AF, #6B7280)',
+                            }}
+                          >
+                            {(match.away_team as any)?.name?.charAt(0)}
+                          </div>
+                          <span
+                            className="font-bold text-sm truncate"
+                            style={{ color: awayWon ? '#111827' : '#6B7280' }}
+                          >
+                            {(match.away_team as any)?.name}
+                          </span>
                         </div>
-                        <span
-                          className="font-bold text-base"
-                          style={{ color: awayWon ? '#111827' : '#6B7280' }}
-                        >
-                          {(match.away_team as any)?.name}
-                        </span>
                       </div>
-                    </div>
                   )
                 })}
               </div>

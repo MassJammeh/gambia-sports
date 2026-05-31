@@ -67,19 +67,19 @@ export default async function StandingsPage() {
           <div className="rounded-2xl overflow-hidden shadow-md" style={{ border: '1px solid #E5E7EB' }}>
             <table className="w-full text-sm">
               <thead>
-                <tr style={{ background: 'linear-gradient(135deg, #0F4A28, #1A6B3A)' }}>
-                  <th className="px-4 py-4 text-left text-white font-bold text-xs uppercase tracking-wider w-8">#</th>
-                  <th className="px-4 py-4 text-left text-white font-bold text-xs uppercase tracking-wider">Club</th>
-                  <th className="px-4 py-4 text-center text-white font-bold text-xs uppercase tracking-wider">MP</th>
-                  <th className="px-4 py-4 text-center text-white font-bold text-xs uppercase tracking-wider">W</th>
-                  <th className="px-4 py-4 text-center text-white font-bold text-xs uppercase tracking-wider">D</th>
-                  <th className="px-4 py-4 text-center text-white font-bold text-xs uppercase tracking-wider">L</th>
-                  <th className="px-4 py-4 text-center text-white font-bold text-xs uppercase tracking-wider">GF</th>
-                  <th className="px-4 py-4 text-center text-white font-bold text-xs uppercase tracking-wider">GA</th>
-                  <th className="px-4 py-4 text-center text-white font-bold text-xs uppercase tracking-wider">GD</th>
-                  <th className="px-4 py-4 text-center text-white font-bold text-xs uppercase tracking-wider">PTS</th>
-                </tr>
-              </thead>
+                  <tr style={{ background: 'linear-gradient(135deg, #0F4A28, #1A6B3A)' }}>
+                    <th className="px-3 py-4 text-left text-white font-bold text-xs uppercase tracking-wider w-8">#</th>
+                    <th className="px-3 py-4 text-left text-white font-bold text-xs uppercase tracking-wider">Club</th>
+                    <th className="px-3 py-4 text-center text-white font-bold text-xs uppercase tracking-wider">MP</th>
+                    <th className="px-3 py-4 text-center text-white font-bold text-xs uppercase tracking-wider hidden sm:table-cell">W</th>
+                    <th className="px-3 py-4 text-center text-white font-bold text-xs uppercase tracking-wider hidden sm:table-cell">D</th>
+                    <th className="px-3 py-4 text-center text-white font-bold text-xs uppercase tracking-wider hidden sm:table-cell">L</th>
+                    <th className="px-3 py-4 text-center text-white font-bold text-xs uppercase tracking-wider hidden md:table-cell">GF</th>
+                    <th className="px-3 py-4 text-center text-white font-bold text-xs uppercase tracking-wider hidden md:table-cell">GA</th>
+                    <th className="px-3 py-4 text-center text-white font-bold text-xs uppercase tracking-wider hidden sm:table-cell">GD</th>
+                    <th className="px-3 py-4 text-center text-white font-bold text-xs uppercase tracking-wider">PTS</th>
+                  </tr>
+                </thead>
               <tbody>
                 {standings.map((row, index) => (
                   <tr
@@ -111,13 +111,13 @@ export default async function StandingsPage() {
                         </span>
                       </div>
                     </td>
-                    <td className="px-4 py-4 text-center font-medium" style={{ color: '#6B7280' }}>{row.played}</td>
-                    <td className="px-4 py-4 text-center font-medium" style={{ color: '#16A34A' }}>{row.won}</td>
-                    <td className="px-4 py-4 text-center font-medium" style={{ color: '#6B7280' }}>{row.drawn}</td>
-                    <td className="px-4 py-4 text-center font-medium" style={{ color: '#C1272D' }}>{row.lost}</td>
-                    <td className="px-4 py-4 text-center font-medium" style={{ color: '#1F2937' }}>{row.goals_for}</td>
-                    <td className="px-4 py-4 text-center font-medium" style={{ color: '#1F2937' }}>{row.goals_against}</td>
-                    <td className="px-4 py-4 text-center font-bold" style={{ color: row.goal_difference > 0 ? '#16A34A' : row.goal_difference < 0 ? '#C1272D' : '#6B7280' }}>
+                    <td className="px-3 py-4 text-center font-medium" style={{ color: '#6B7280' }}>{row.played}</td>
+                    <td className="px-3 py-4 text-center font-medium hidden sm:table-cell" style={{ color: '#16A34A' }}>{row.won}</td>
+                    <td className="px-3 py-4 text-center font-medium hidden sm:table-cell" style={{ color: '#6B7280' }}>{row.drawn}</td>
+                    <td className="px-3 py-4 text-center font-medium hidden sm:table-cell" style={{ color: '#C1272D' }}>{row.lost}</td>
+                    <td className="px-3 py-4 text-center font-medium hidden md:table-cell" style={{ color: '#1F2937' }}>{row.goals_for}</td>
+                    <td className="px-3 py-4 text-center font-medium hidden md:table-cell" style={{ color: '#1F2937' }}>{row.goals_against}</td>
+                    <td className="px-3 py-4 text-center font-bold hidden sm:table-cell" style={{ color: row.goal_difference > 0 ? '#16A34A' : row.goal_difference < 0 ? '#C1272D' : '#6B7280' }}>
                       {row.goal_difference > 0 ? '+' : ''}{row.goal_difference}
                     </td>
                     <td className="px-4 py-4 text-center">
