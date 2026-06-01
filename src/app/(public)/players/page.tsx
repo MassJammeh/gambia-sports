@@ -1,5 +1,7 @@
+import Link from 'next/link'
 import { getActiveLeagues } from '@/lib/queries'
 import { createClient } from '@/lib/supabase/server'
+
 
 const positionConfig: Record<string, { bg: string }> = {
   GK: { bg: '#D97706' },
@@ -135,10 +137,11 @@ export default async function PlayersPage() {
                     {sortedSquad.map((player) => {
                       const config = positionConfig[player.position] ?? { bg: '#6B7280' }
                       return (
-                        <div
-                          key={player.id}
-                          className="px-6 py-3.5 flex items-center gap-4 transition-all hover:bg-gray-50"
-                        >
+                        <Link
+                            key={player.id}
+                            href={`/players/${player.id}`}
+                            className="px-6 py-3.5 flex items-center gap-4 transition-all hover:bg-gray-50"
+                          >
                           {/* Jersey number */}
                           <div
                             className="w-9 h-9 rounded-lg flex items-center justify-center font-black text-sm text-white flex-shrink-0"
@@ -166,7 +169,7 @@ export default async function PlayersPage() {
                           >
                             {player.position}
                           </span>
-                        </div>
+                        </Link>
                       )
                     })}
                   </div>
