@@ -11,6 +11,7 @@ const navLinks = [
   { href: '/results', label: 'Results' },
   { href: '/teams', label: 'Teams' },
   { href: '/players', label: 'Players' },
+  { href: '/leagues', label: 'Leagues' },
 ]
 
 export default function Navbar() {

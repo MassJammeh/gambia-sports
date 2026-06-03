@@ -267,11 +267,12 @@ export default async function HomePage() {
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {leagues.map((league) => (
-                <div
-                  key={league.id}
-                  className="bg-white rounded-2xl p-5 flex items-center gap-4 shadow-sm hover:shadow-md transition-all"
-                  style={{ border: '1px solid #E5E7EB' }}
-                >
+                <Link
+                    key={league.id}
+                    href={`/leagues/${league.slug}`}
+                    className="bg-white rounded-2xl p-5 flex items-center gap-4 shadow-sm hover:shadow-md transition-all"
+                    style={{ border: '1px solid #E5E7EB' }}
+                  >
                   <div
                     className="w-14 h-14 rounded-2xl flex items-center justify-center text-white font-black text-2xl flex-shrink-0 shadow-md"
                     style={{ background: 'linear-gradient(135deg, #1A6B3A, #2D8A50)' }}
@@ -292,7 +293,7 @@ export default async function HomePage() {
                       </span>
                     </div>
                   </div>
-                </div>
+                </Link>
               ))}
             </div>
           </section>
