@@ -24,6 +24,14 @@ export default async function AdminDashboard() {
       .eq('status', 'active')
       .single()
     seasonId = season?.id ?? null
+  } else if (isSuperAdmin) {
+    const { data: season } = await supabase
+      .from('seasons')
+      .select('id')
+      .eq('status', 'active')
+      .limit(1)
+      .single()
+    seasonId = season?.id ?? null
   }
 
   // Get stats
@@ -34,30 +42,42 @@ export default async function AdminDashboard() {
     { count: upcomingCount },
     { count: postponedCount },
   ] = await Promise.all([
-    supabase.from('teams').select('*', { count: 'exact', head: true }).eq('league_id', leagueId ?? '').eq('status', 'active'),
+    isSuperAdmin
+      ? supabase.from('teams').select('*', { count: 'exact', head: true }).eq('status', 'active')
+      : supabase.from('teams').select('*', { count: 'exact', head: true }).eq('league_id', leagueId ?? '').eq('status', 'active'),
     supabase.from('players').select('*', { count: 'exact', head: true }).eq('status', 'active'),
-    seasonId ? supabase.from('matches').select('*', { count: 'exact', head: true }).eq('season_id', seasonId).eq('status', 'completed') : Promise.resolve({ count: 0 }),
-    seasonId ? supabase.from('matches').select('*', { count: 'exact', head: true }).eq('season_id', seasonId).eq('status', 'scheduled') : Promise.resolve({ count: 0 }),
-    seasonId ? supabase.from('matches').select('*', { count: 'exact', head: true }).eq('season_id', seasonId).eq('status', 'postponed') : Promise.resolve({ count: 0 }),
+    seasonId
+      ? supabase.from('matches').select('*', { count: 'exact', head: true }).eq('season_id', seasonId).eq('status', 'completed')
+      : Promise.resolve({ count: 0 }),
+    seasonId
+      ? supabase.from('matches').select('*', { count: 'exact', head: true }).eq('season_id', seasonId).eq('status', 'scheduled')
+      : Promise.resolve({ count: 0 }),
+    seasonId
+      ? supabase.from('matches').select('*', { count: 'exact', head: true }).eq('season_id', seasonId).eq('status', 'postponed')
+      : Promise.resolve({ count: 0 }),
   ])
 
   // Get recent results
-  const { data: recentResults } = seasonId ? await supabase
-    .from('matches')
-    .select('*, home_team:teams!home_team_id(name), away_team:teams!away_team_id(name)')
-    .eq('season_id', seasonId)
-    .eq('status', 'completed')
-    .order('scheduled_at', { ascending: false })
-    .limit(3) : { data: null }
+  const { data: recentResults } = seasonId
+    ? await supabase
+        .from('matches')
+        .select('*, home_team:teams!home_team_id(name), away_team:teams!away_team_id(name)')
+        .eq('season_id', seasonId)
+        .eq('status', 'completed')
+        .order('scheduled_at', { ascending: false })
+        .limit(3)
+    : { data: null }
 
   // Get upcoming fixtures
-  const { data: upcomingFixtures } = seasonId ? await supabase
-    .from('matches')
-    .select('*, home_team:teams!home_team_id(name), away_team:teams!away_team_id(name)')
-    .eq('season_id', seasonId)
-    .eq('status', 'scheduled')
-    .order('scheduled_at', { ascending: true })
-    .limit(3) : { data: null }
+  const { data: upcomingFixtures } = seasonId
+    ? await supabase
+        .from('matches')
+        .select('*, home_team:teams!home_team_id(name), away_team:teams!away_team_id(name)')
+        .eq('season_id', seasonId)
+        .eq('status', 'scheduled')
+        .order('scheduled_at', { ascending: true })
+        .limit(3)
+    : { data: null }
 
   const stats = [
     { label: 'Teams', value: teamsCount ?? 0, icon: '🛡️', color: '#1A6B3A', href: '/admin/teams' },
@@ -75,7 +95,7 @@ export default async function AdminDashboard() {
           Dashboard
         </h1>
         <p className="text-sm mt-1 font-medium" style={{ color: '#6B7280' }}>
-          Welcome back, {profile?.display_name ?? 'Admin'} · {(profile as any)?.league?.name ?? 'All Leagues'}
+          Welcome back, {profile?.display_name ?? profile?.role ?? 'Admin'} · {(profile as any)?.league?.name ?? 'All Leagues'}
         </p>
       </div>
 
