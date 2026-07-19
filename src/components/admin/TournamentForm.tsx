@@ -23,6 +23,8 @@ export default function TournamentForm({
   const [teamsAdvance, setTeamsAdvance] = useState(tournament?.teams_advance_per_group ?? 2)
   const [startDate, setStartDate] = useState(tournament?.start_date ?? '')
   const [endDate, setEndDate] = useState(tournament?.end_date ?? '')
+  const [community, setCommunity] = useState(tournament?.community ?? '')
+  const [tournamentType, setTournamentType] = useState(tournament?.tournament_type ?? 'big_cup')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const router = useRouter()
@@ -48,6 +50,8 @@ export default function TournamentForm({
       teams_advance_per_group: teamsAdvance ? Number(teamsAdvance) : null,
       start_date: startDate || null,
       end_date: endDate || null,
+      community: community || null,
+      tournament_type: tournamentType,
     }
 
     const { error } = isEdit
@@ -72,13 +76,14 @@ export default function TournamentForm({
         </div>
       )}
 
+      {/* Name + Slug */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
         <div>
           <label className="block text-sm font-bold mb-2" style={{ color: '#111827' }}>Tournament Name *</label>
           <input
             type="text" value={name}
             onChange={(e) => { setName(e.target.value); if (!isEdit) setSlug(generateSlug(e.target.value)) }}
-            required placeholder="e.g. Nawetans 2025"
+            required placeholder="e.g. Nawetans 2025 Big Cup"
             className="w-full px-4 py-3 rounded-xl text-sm outline-none"
             style={{ border: '2px solid #E5E7EB', color: '#111827', backgroundColor: '#F9FAFB' }}
           />
@@ -88,13 +93,14 @@ export default function TournamentForm({
           <input
             type="text" value={slug}
             onChange={(e) => setSlug(e.target.value)}
-            required placeholder="e.g. nawetans-2025"
+            required placeholder="e.g. nawetans-2025-big-cup"
             className="w-full px-4 py-3 rounded-xl text-sm outline-none"
             style={{ border: '2px solid #E5E7EB', color: '#111827', backgroundColor: '#F9FAFB' }}
           />
         </div>
       </div>
 
+      {/* Season */}
       <div>
         <label className="block text-sm font-bold mb-2" style={{ color: '#111827' }}>Season *</label>
         <select value={seasonId} onChange={(e) => setSeasonId(e.target.value)} required
@@ -107,6 +113,47 @@ export default function TournamentForm({
         </select>
       </div>
 
+      {/* Tournament Type */}
+      <div>
+        <label className="block text-sm font-bold mb-2" style={{ color: '#111827' }}>
+          Tournament Type *
+        </label>
+        <select value={tournamentType} onChange={(e) => setTournamentType(e.target.value)} required
+          className="w-full px-4 py-3 rounded-xl text-sm outline-none"
+          style={{ border: '2px solid #E5E7EB', color: '#111827', backgroundColor: '#F9FAFB' }}
+        >
+          <option value="qualify_round">🔑 Qualify Round (New & relegated teams)</option>
+          <option value="small_cup">🥈 Small Cup (Pure Knockout — like Carabao Cup)</option>
+          <option value="big_cup">🏆 Big Cup (Group Stage + Knockout — like World Cup)</option>
+          <option value="league">📊 League / Round Robin (like GFF First Division)</option>
+        </select>
+      </div>
+
+      {/* Community */}
+      <div>
+        <label className="block text-sm font-bold mb-2" style={{ color: '#111827' }}>
+          Community / Venue
+        </label>
+        <select value={community} onChange={(e) => setCommunity(e.target.value)}
+          className="w-full px-4 py-3 rounded-xl text-sm outline-none"
+          style={{ border: '2px solid #E5E7EB', color: '#111827', backgroundColor: '#F9FAFB' }}
+        >
+          <option value="">Select community...</option>
+          <option value="serekunda_west">🏟 Serekunda West Mini Stadium</option>
+          <option value="serekunda_east">🏟 Serekunda East Mini Stadium</option>
+          <option value="manjai">🏟 Manjai Park Mini Stadium</option>
+          <option value="brikama">🏟 Brikama Box Bar Mini Stadium</option>
+          <option value="banjul">🏟 Banjul Mini Parks</option>
+          <option value="bakau">🏟 Bakau Mini Stadium</option>
+          <option value="tallinding">🏟 Tallinding Mini Stadium</option>
+          <option value="latrikunda">🏟 Latrikunda Mini Stadium</option>
+          <option value="bundung">🏟 Bundung Mini Stadium</option>
+          <option value="sukuta">🏟 Sukuta Mini Stadium</option>
+          <option value="other">🏟 Other</option>
+        </select>
+      </div>
+
+      {/* Format + Status */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
         <div>
           <label className="block text-sm font-bold mb-2" style={{ color: '#111827' }}>Format *</label>
@@ -134,25 +181,57 @@ export default function TournamentForm({
         </div>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-        <div>
-          <label className="block text-sm font-bold mb-2" style={{ color: '#111827' }}>Number of Groups</label>
-          <input type="number" value={numGroups} onChange={(e) => setNumGroups(e.target.value)}
-            min={1} max={8} placeholder="e.g. 4"
-            className="w-full px-4 py-3 rounded-xl text-sm outline-none"
-            style={{ border: '2px solid #E5E7EB', color: '#111827', backgroundColor: '#F9FAFB' }}
-          />
+      {/* Groups (only for big_cup and league) */}
+      {(tournamentType === 'big_cup' || tournamentType === 'league') && (
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+          <div>
+            <label className="block text-sm font-bold mb-2" style={{ color: '#111827' }}>Number of Groups</label>
+            <input type="number" value={numGroups} onChange={(e) => setNumGroups(e.target.value)}
+              min={1} max={8} placeholder="e.g. 4"
+              className="w-full px-4 py-3 rounded-xl text-sm outline-none"
+              style={{ border: '2px solid #E5E7EB', color: '#111827', backgroundColor: '#F9FAFB' }}
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-bold mb-2" style={{ color: '#111827' }}>Teams Advancing per Group</label>
+            <input type="number" value={teamsAdvance} onChange={(e) => setTeamsAdvance(e.target.value)}
+              min={1} max={4} placeholder="e.g. 2"
+              className="w-full px-4 py-3 rounded-xl text-sm outline-none"
+              style={{ border: '2px solid #E5E7EB', color: '#111827', backgroundColor: '#F9FAFB' }}
+            />
+          </div>
         </div>
-        <div>
-          <label className="block text-sm font-bold mb-2" style={{ color: '#111827' }}>Teams Advancing per Group</label>
-          <input type="number" value={teamsAdvance} onChange={(e) => setTeamsAdvance(e.target.value)}
-            min={1} max={4} placeholder="e.g. 2"
-            className="w-full px-4 py-3 rounded-xl text-sm outline-none"
-            style={{ border: '2px solid #E5E7EB', color: '#111827', backgroundColor: '#F9FAFB' }}
-          />
-        </div>
-      </div>
+      )}
 
+      {/* Qualify round info */}
+      {tournamentType === 'qualify_round' && (
+        <div
+          className="px-4 py-3 rounded-xl text-sm"
+          style={{ backgroundColor: '#FEF3C7', border: '1px solid #FDE68A', color: '#D97706' }}
+        >
+          🔑 <strong>Qualify Round:</strong> Only new teams and teams relegated from the previous season can participate. Winners qualify for the Small Cup and Big Cup.
+        </div>
+      )}
+
+      {tournamentType === 'small_cup' && (
+        <div
+          className="px-4 py-3 rounded-xl text-sm"
+          style={{ backgroundColor: '#EFF6FF', border: '1px solid #BFDBFE', color: '#1D4ED8' }}
+        >
+          🥈 <strong>Small Cup:</strong> Pure knockout format. Teams are eliminated immediately after losing one match — like the Carabao Cup.
+        </div>
+      )}
+
+      {tournamentType === 'big_cup' && (
+        <div
+          className="px-4 py-3 rounded-xl text-sm"
+          style={{ backgroundColor: '#FEE2E2', border: '1px solid #FECACA', color: '#C1272D' }}
+        >
+          🏆 <strong>Big Cup:</strong> Group stage followed by a knockout bracket — like the FIFA World Cup and UEFA Champions League.
+        </div>
+      )}
+
+      {/* Dates */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
         <div>
           <label className="block text-sm font-bold mb-2" style={{ color: '#111827' }}>Start Date</label>
@@ -170,6 +249,7 @@ export default function TournamentForm({
         </div>
       </div>
 
+      {/* Description */}
       <div>
         <label className="block text-sm font-bold mb-2" style={{ color: '#111827' }}>Description</label>
         <textarea value={description} onChange={(e) => setDescription(e.target.value)}
@@ -179,6 +259,7 @@ export default function TournamentForm({
         />
       </div>
 
+      {/* Buttons */}
       <div className="flex gap-3 pt-2">
         <Link href="/admin/tournaments"
           className="flex-1 py-3 rounded-xl font-black text-sm uppercase tracking-wide text-center"
