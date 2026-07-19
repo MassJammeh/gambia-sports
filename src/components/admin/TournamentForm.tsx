@@ -123,9 +123,11 @@ export default function TournamentForm({
           style={{ border: '2px solid #E5E7EB', color: '#111827', backgroundColor: '#F9FAFB' }}
         >
           <option value="qualify_round">🔑 Qualify Round (New & relegated teams)</option>
-          <option value="small_cup">🥈 Small Cup (Pure Knockout — like Carabao Cup)</option>
-          <option value="big_cup">🏆 Big Cup (Group Stage + Knockout — like World Cup)</option>
+          <option value="small_cup_nawettan">🥈 Small Cup Nawettan (Pure Knockout — like Carabao Cup)</option>
+          <option value="big_cup_nawettan">🏆 Big Cup Nawettan (Group Stage + Knockout — like World Cup)</option>
           <option value="league">📊 League / Round Robin (like GFF First Division)</option>
+          <option value="cup">🥇 Cup Competition</option>
+          <option value="friendly">🤝 Friendly Tournament</option>
         </select>
       </div>
 
@@ -182,7 +184,7 @@ export default function TournamentForm({
       </div>
 
       {/* Groups (only for big_cup and league) */}
-      {(tournamentType === 'big_cup' || tournamentType === 'league') && (
+      {(tournamentType === 'big_cup_nawettan' || tournamentType === 'league') && (
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
           <div>
             <label className="block text-sm font-bold mb-2" style={{ color: '#111827' }}>Number of Groups</label>
@@ -213,7 +215,7 @@ export default function TournamentForm({
         </div>
       )}
 
-      {tournamentType === 'small_cup' && (
+      {tournamentType === 'small_cup_nawettan' && (
         <div
           className="px-4 py-3 rounded-xl text-sm"
           style={{ backgroundColor: '#EFF6FF', border: '1px solid #BFDBFE', color: '#1D4ED8' }}

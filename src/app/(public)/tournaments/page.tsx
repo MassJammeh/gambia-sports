@@ -18,9 +18,11 @@ const communityLabels: Record<string, string> = {
 
 const typeConfig: Record<string, { label: string; color: string; bg: string; icon: string }> = {
   qualify_round: { label: 'Qualify Round', color: '#D97706', bg: '#FEF3C7', icon: '🔑' },
-  small_cup: { label: 'Small Cup', color: '#0057A8', bg: '#EFF6FF', icon: '🥈' },
-  big_cup: { label: 'Big Cup', color: '#C1272D', bg: '#FEE2E2', icon: '🏆' },
+  small_cup_nawettan: { label: 'Small Cup Nawettan', color: '#0057A8', bg: '#EFF6FF', icon: '🥈' },
+  big_cup_nawettan: { label: 'Big Cup Nawettan', color: '#C1272D', bg: '#FEE2E2', icon: '🏆' },
   league: { label: 'League', color: '#1A6B3A', bg: '#E8F5EE', icon: '📊' },
+  cup: { label: 'Cup', color: '#7C3AED', bg: '#F5F3FF', icon: '🥇' },
+  friendly: { label: 'Friendly', color: '#6B7280', bg: '#F3F4F6', icon: '🤝' },
 }
 
 const statusConfig: Record<string, { bg: string; color: string; label: string }> = {
@@ -78,8 +80,8 @@ export default async function TournamentsPage() {
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-3">
           {[
             { icon: '🔑', title: 'Qualify Round', desc: 'New & relegated teams compete. Winners enter the main Nawetans.' },
-            { icon: '🥈', title: 'Small Cup', desc: 'Pure knockout format. Lose once and you\'re out — like the Carabao Cup.' },
-            { icon: '🏆', title: 'Big Cup', desc: 'Group stage then knockout. Like the World Cup & Champions League.' },
+            { icon: '🥈', title: 'Small Cup Nawettan', desc: 'Pure knockout — lose once and you\'re out. Like the Carabao Cup.' },
+            { icon: '🏆', title: 'Big Cup Nawettan', desc: 'Group stage then knockout. Like the World Cup & Champions League.' },
           ].map((item) => (
             <div key={item.title} className="rounded-xl p-3" style={{ backgroundColor: 'rgba(255,255,255,0.1)' }}>
               <div className="text-xl mb-1">{item.icon} <span className="font-black text-sm">{item.title}</span></div>
@@ -118,7 +120,7 @@ export default async function TournamentsPage() {
 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 {/* Show in order: qualify_round, small_cup, big_cup */}
-                {(['qualify_round', 'small_cup', 'big_cup', 'league'] as const).map((type) => {
+                {(['qualify_round', 'small_cup_nawettan', 'big_cup_nawettan', 'league'] as const).map((type) => {
                   const t = communityTournaments?.find(t => t.tournament_type === type)
                   const typeInfo = typeConfig[type]
 
