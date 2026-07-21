@@ -20,12 +20,12 @@ export default async function AdminLayout({
     .eq('id', user.id)
     .single()
 
-  if (!profile || !['league_admin', 'super_admin', 'reporter'].includes(profile.role)) {
+  if (!profile || !['super_admin'].includes(profile.role)) {
     redirect('/')
   }
 
   return (
-    <div className="min-h-screen flex" style={{ backgroundColor: '#F3F4F6' }}>
+    <div className="min-h-screen flex" style={{ backgroundColor: '#0A0F0D' }}>
       <AdminSidebar profile={profile} />
       <main className="flex-1 p-6 lg:p-8 overflow-auto lg:mt-0 mt-14">
         {children}
