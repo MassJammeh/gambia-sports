@@ -45,10 +45,10 @@ export default async function CommunityPage({
       </div>
 
       {/* Community Header */}
-      <div className="rounded-xl p-6 flex items-center gap-5" style={{ backgroundColor: '#141A17', border: '1px solid #1F2B26' }}>
+      <div className="rounded-xl p-6 flex items-center gap-5" style={{ backgroundColor: '#1A2420', border: '1px solid #243029' }}>
         <div
           className="w-16 h-16 rounded-xl flex items-center justify-center font-black text-2xl flex-shrink-0"
-          style={{ backgroundColor: '#0D3320', color: '#00FF87', border: '1px solid #00C96820' }}
+          style={{ backgroundColor: '#0F3D25', color: '#00FF87', border: '1px solid #00C96830' }}
         >
           {community.name.charAt(0)}
         </div>

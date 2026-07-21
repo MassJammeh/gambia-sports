@@ -117,12 +117,12 @@ export default async function HomePage() {
               key={community.id}
               href={`/communities/${community.slug}`}
               className="rounded-xl overflow-hidden transition-all hover:scale-[1.02] group"
-              style={{ backgroundColor: '#141A17', border: '1px solid #1F2B26' }}
+              style={{ backgroundColor: '#1A2420', border: '1px solid #243029' }}
             >
               <div className="px-5 py-4 flex items-center gap-4">
                 <div
                   className="w-11 h-11 rounded-lg flex items-center justify-center font-black text-lg flex-shrink-0"
-                  style={{ backgroundColor: '#0D3320', color: '#00FF87', border: '1px solid #00C96820' }}
+                  style={{ backgroundColor: '#0F3D25', color: '#00FF87', border: '1px solid #00C96830' }}
                 >
                   {community.name.charAt(0)}
                 </div>
@@ -138,7 +138,7 @@ export default async function HomePage() {
                   →
                 </span>
               </div>
-              <div className="px-5 py-3 flex items-center gap-2" style={{ borderTop: '1px solid #1F2B26' }}>
+              <div className="px-5 py-3 flex items-center gap-2" style={{ borderTop: '1px solid #243029' }}>
                 <span className="text-xs font-bold px-2 py-0.5 rounded" style={{ backgroundColor: '#1A0A0A', color: '#FF3B3B' }}>
                   🏆 Nawettan
                 </span>
@@ -155,7 +155,7 @@ export default async function HomePage() {
         </div>
 
         {/* How it works */}
-        <div className="rounded-xl p-6" style={{ backgroundColor: '#141A17', border: '1px solid #1F2B26' }}>
+        <div className="rounded-xl p-6" style={{ backgroundColor: '#1A2420', border: '1px solid #243029' }}>
           <div className="text-xs font-black uppercase tracking-widest mb-5" style={{ color: '#4A5C54' }}>
             How GamFoot Works
           </div>
@@ -177,7 +177,7 @@ export default async function HomePage() {
         </div>
 
         {/* Footer */}
-        <div className="text-center py-6" style={{ borderTop: '1px solid #1F2B26' }}>
+        <div className="text-center py-6" style={{ borderTop: '1px solid #243029' }}>
           <div className="text-sm font-black" style={{ color: '#4A5C54' }}>
             GamFoot 🇬🇲 · Built by TechPalz
           </div>

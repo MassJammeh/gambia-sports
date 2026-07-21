@@ -7,7 +7,7 @@ export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false)
 
   return (
-    <nav className="text-white sticky top-0 z-40" style={{ backgroundColor: '#0A0F0D', borderBottom: '1px solid #1F2B26' }}>
+    <nav className="text-white sticky top-0 z-40" style={{ backgroundColor: '#0D1410', borderBottom: '1px solid #1E2A24' }}>
       <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2 group" onClick={() => setMenuOpen(false)}>
           <span className="text-2xl">🇬🇲</span>
