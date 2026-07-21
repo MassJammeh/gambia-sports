@@ -9,6 +9,18 @@ export async function proxy(request: NextRequest) {
     },
   })
 
+  // Only check auth if there's a session cookie
+  const hasSession = request.cookies.has('sb-access-token') ||
+    request.cookies.getAll().some(c => c.name.includes('auth-token'))
+
+  if (!hasSession &&
+    request.nextUrl.pathname.startsWith('/admin') &&
+    !request.nextUrl.pathname.startsWith('/admin/login')) {
+    return NextResponse.redirect(new URL('/admin/login', request.url))
+  }
+
+  if (!hasSession) return response
+
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
@@ -18,18 +30,10 @@ export async function proxy(request: NextRequest) {
           return request.cookies.get(name)?.value
         },
         set(name, value, options) {
-          response.cookies.set({
-            name,
-            value,
-            ...options,
-          })
+          response.cookies.set({ name, value, ...options })
         },
         remove(name, options) {
-          response.cookies.set({
-            name,
-            value: '',
-            ...options,
-          })
+          response.cookies.set({ name, value: '', ...options })
         },
       },
     }
@@ -42,13 +46,11 @@ export async function proxy(request: NextRequest) {
     request.nextUrl.pathname.startsWith('/admin') &&
     !request.nextUrl.pathname.startsWith('/admin/login')
   ) {
-    const loginUrl = new URL('/admin/login', request.url)
-    return NextResponse.redirect(loginUrl)
+    return NextResponse.redirect(new URL('/admin/login', request.url))
   }
 
   if (user && request.nextUrl.pathname === '/admin/login') {
-    const adminUrl = new URL('/admin', request.url)
-    return NextResponse.redirect(adminUrl)
+    return NextResponse.redirect(new URL('/admin', request.url))
   }
 
   return response
