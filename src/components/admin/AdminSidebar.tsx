@@ -6,6 +6,7 @@ import { useState } from 'react'
 
 const navItems = [
   { href: '/admin', label: 'Dashboard', icon: '📊', exact: true },
+  { href: '/admin/communities', label: 'Communities', icon: '🏟' },
   { href: '/admin/matches', label: 'Matches', icon: '⚽' },
   { href: '/admin/fixtures/new', label: 'New Fixture', icon: '📅' },
   { href: '/admin/teams', label: 'Teams', icon: '🛡️' },
