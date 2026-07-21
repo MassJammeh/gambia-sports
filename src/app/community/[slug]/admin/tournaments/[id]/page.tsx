@@ -1,0 +1,61 @@
+import { createClient } from '@/lib/supabase/server'
+import { getCommunityBySlug, getTeamsByCommunity } from '@/lib/queries'
+import { notFound, redirect } from 'next/navigation'
+import CommunityTournamentForm from '@/components/community/TournamentForm'
+import Link from 'next/link'
+
+export default async function ManageTournamentPage({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ slug: string; id: string }>
+  searchParams: Promise<{ status?: string }>
+}) {
+  const { slug, id } = await params
+  const { status: newStatus } = await searchParams
+
+  const { data: community } = await getCommunityBySlug(slug)
+  if (!community) notFound()
+
+  const supabase = await createClient()
+
+  // Update status if provided
+  if (newStatus) {
+    await supabase.from('tournaments').update({ status: newStatus }).eq('id', id)
+    redirect(`/community/${slug}/admin/tournaments`)
+  }
+
+  const { data: tournament } = await supabase.from('tournaments').select('*').eq('id', id).single()
+  if (!tournament) notFound()
+
+  const { data: teams } = await getTeamsByCommunity(community.id)
+
+  const { data: groups } = await supabase
+    .from('tournament_groups')
+    .select('*, group_teams(team_id, team:teams(id, name))')
+    .eq('tournament_id', id)
+    .order('name')
+
+  return (
+    <div className="max-w-2xl space-y-6">
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-xl font-black" style={{ color: '#F0F4F2' }}>Manage Tournament</h1>
+          <p className="text-xs mt-0.5" style={{ color: '#4A5C54' }}>{tournament.name}</p>
+        </div>
+        <Link href={`/community/${slug}/admin/tournaments`}
+          className="text-xs font-bold" style={{ color: '#4A5C54' }}>
+          Back
+        </Link>
+      </div>
+
+      <CommunityTournamentForm
+        communityId={community.id}
+        communitySlug={slug}
+        teams={teams ?? []}
+        tournament={tournament}
+        groups={groups ?? []}
+      />
+    </div>
+  )
+}
