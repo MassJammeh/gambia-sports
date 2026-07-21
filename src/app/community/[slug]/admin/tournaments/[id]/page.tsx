@@ -2,6 +2,7 @@ import { createClient } from '@/lib/supabase/server'
 import { getCommunityBySlug, getTeamsByCommunity } from '@/lib/queries'
 import { notFound, redirect } from 'next/navigation'
 import CommunityTournamentForm from '@/components/community/TournamentForm'
+import GroupTeamManager from '@/components/community/GroupTeamManager'
 import Link from 'next/link'
 
 export default async function ManageTournamentPage({
@@ -32,12 +33,19 @@ export default async function ManageTournamentPage({
 
   const { data: groups } = await supabase
     .from('tournament_groups')
-    .select('*, group_teams(team_id, team:teams(id, name))')
+    .select(`
+      *,
+      group_teams(
+        id,
+        team_id,
+        team:teams(id, name)
+      )
+    `)
     .eq('tournament_id', id)
     .order('name')
 
   return (
-    <div className="max-w-2xl space-y-6">
+    <div className="max-w-3xl space-y-6">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-xl font-black" style={{ color: '#F0F4F2' }}>Manage Tournament</h1>
@@ -49,6 +57,7 @@ export default async function ManageTournamentPage({
         </Link>
       </div>
 
+      {/* Tournament form */}
       <CommunityTournamentForm
         communityId={community.id}
         communitySlug={slug}
@@ -56,6 +65,15 @@ export default async function ManageTournamentPage({
         tournament={tournament}
         groups={groups ?? []}
       />
+
+      {/* Group team assignment */}
+      {groups && groups.length > 0 && (
+        <GroupTeamManager
+          groups={groups}
+          teams={teams ?? []}
+          tournamentId={id}
+        />
+      )}
     </div>
   )
 }
