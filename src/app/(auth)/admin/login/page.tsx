@@ -2,7 +2,6 @@
 
 import { useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
-import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 
 export default function AdminLoginPage() {
@@ -10,74 +9,85 @@ export default function AdminLoginPage() {
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
-  const router = useRouter()
 
   async function handleLogin(e: React.FormEvent) {
-  e.preventDefault()
-  setLoading(true)
-  setError('')
+    e.preventDefault()
+    setLoading(true)
+    setError('')
 
-  const supabase = createClient()
-  const { error } = await supabase.auth.signInWithPassword({ email, password })
+    const supabase = createClient()
+    const { error } = await supabase.auth.signInWithPassword({ email, password })
 
-  if (error) {
-    setError(error.message)
-    setLoading(false)
-    return
+    if (error) {
+      setError(error.message)
+      setLoading(false)
+      return
+    }
+
+    window.location.href = '/admin'
   }
-
-  window.location.href = '/admin'
-}
 
   return (
     <div
       className="min-h-screen flex items-center justify-center px-4"
-      style={{ background: 'linear-gradient(135deg, #0F4A28 0%, #1A6B3A 100%)' }}
+      style={{ backgroundColor: '#0A0F0D' }}
     >
       {/* Background pattern */}
       <div
-        className="absolute inset-0 opacity-10"
+        className="fixed inset-0 opacity-5"
         style={{
-          backgroundImage: 'radial-gradient(circle, white 1px, transparent 1px)',
+          backgroundImage: 'radial-gradient(circle, #00FF87 1px, transparent 1px)',
           backgroundSize: '32px 32px',
         }}
       />
 
-      <div className="relative z-10 w-full max-w-md">
+      <div className="relative z-10 w-full max-w-sm">
+
         {/* Logo */}
         <div className="text-center mb-8">
-          <Link href="/" className="inline-flex items-center gap-3">
+          <Link href="/" className="inline-flex flex-col items-center gap-2">
             <span className="text-4xl">🇬🇲</span>
-            <span className="text-white font-black uppercase tracking-widest text-2xl">GamFoot</span>
+            <span
+              className="text-3xl font-black uppercase tracking-widest"
+              style={{ color: '#00FF87' }}
+            >
+              GamFoot
+            </span>
+            <span className="text-xs font-bold uppercase tracking-widest" style={{ color: '#4A5C54' }}>
+              Admin Portal
+            </span>
           </Link>
-          <div className="text-sm mt-2" style={{ color: 'rgba(255,255,255,0.7)' }}>
-            Admin Dashboard
-          </div>
         </div>
 
         {/* Card */}
-        <div className="bg-white rounded-2xl shadow-2xl overflow-hidden">
+        <div
+          className="rounded-2xl overflow-hidden"
+          style={{ backgroundColor: '#141A17', border: '1px solid #1F2B26' }}
+        >
           {/* Card header */}
-          <div className="px-8 py-6" style={{ background: 'linear-gradient(135deg, #0F4A28, #1A6B3A)' }}>
-            <h1 className="text-xl font-black text-white">Sign In</h1>
-            <p className="text-sm mt-1" style={{ color: 'rgba(255,255,255,0.7)' }}>
+          <div
+            className="px-6 py-5"
+            style={{ borderBottom: '1px solid #1F2B26', backgroundColor: '#111916' }}
+          >
+            <h1 className="text-lg font-black" style={{ color: '#F0F4F2' }}>Sign In</h1>
+            <p className="text-xs mt-0.5" style={{ color: '#4A5C54' }}>
               Enter your credentials to access the admin panel
             </p>
           </div>
 
           {/* Form */}
-          <form onSubmit={handleLogin} className="px-8 py-6 space-y-5">
+          <form onSubmit={handleLogin} className="px-6 py-5 space-y-4">
             {error && (
               <div
-                className="px-4 py-3 rounded-xl text-sm font-medium"
-                style={{ backgroundColor: '#FEE2E2', color: '#C1272D', border: '1px solid #FECACA' }}
+                className="px-4 py-3 rounded-xl text-xs font-medium"
+                style={{ backgroundColor: '#2A0A0A', color: '#FF3B3B', border: '1px solid #FF3B3B30' }}
               >
                 ⚠️ {error}
               </div>
             )}
 
             <div>
-              <label className="block text-sm font-bold mb-2" style={{ color: '#111827' }}>
+              <label className="block text-xs font-bold mb-1.5" style={{ color: '#4A5C54' }}>
                 Email Address
               </label>
               <input
@@ -85,20 +95,20 @@ export default function AdminLoginPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                placeholder="admin@example.com"
-                className="w-full px-4 py-3 rounded-xl text-sm outline-none transition-all"
+                placeholder="admin@gamfoot.gm"
+                className="w-full px-4 py-3 rounded-xl text-sm outline-none transition-all font-medium"
                 style={{
-                  border: '2px solid #E5E7EB',
-                  color: '#111827',
-                  backgroundColor: '#F9FAFB',
+                  backgroundColor: '#1A2320',
+                  color: '#F0F4F2',
+                  border: '1px solid #1F2B26',
                 }}
-                onFocus={(e) => e.target.style.borderColor = '#1A6B3A'}
-                onBlur={(e) => e.target.style.borderColor = '#E5E7EB'}
+                onFocus={(e) => e.target.style.borderColor = '#00FF87'}
+                onBlur={(e) => e.target.style.borderColor = '#1F2B26'}
               />
             </div>
 
             <div>
-              <label className="block text-sm font-bold mb-2" style={{ color: '#111827' }}>
+              <label className="block text-xs font-bold mb-1.5" style={{ color: '#4A5C54' }}>
                 Password
               </label>
               <input
@@ -107,32 +117,43 @@ export default function AdminLoginPage() {
                 onChange={(e) => setPassword(e.target.value)}
                 required
                 placeholder="••••••••"
-                className="w-full px-4 py-3 rounded-xl text-sm outline-none transition-all"
+                className="w-full px-4 py-3 rounded-xl text-sm outline-none transition-all font-medium"
                 style={{
-                  border: '2px solid #E5E7EB',
-                  color: '#111827',
-                  backgroundColor: '#F9FAFB',
+                  backgroundColor: '#1A2320',
+                  color: '#F0F4F2',
+                  border: '1px solid #1F2B26',
                 }}
-                onFocus={(e) => e.target.style.borderColor = '#1A6B3A'}
-                onBlur={(e) => e.target.style.borderColor = '#E5E7EB'}
+                onFocus={(e) => e.target.style.borderColor = '#00FF87'}
+                onBlur={(e) => e.target.style.borderColor = '#1F2B26'}
               />
             </div>
 
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3 rounded-xl font-black text-sm uppercase tracking-wide text-white transition-all hover:opacity-90 disabled:opacity-50"
-              style={{ backgroundColor: loading ? '#6B7280' : '#1A6B3A' }}
+              className="w-full py-3 rounded-xl font-black text-sm uppercase tracking-wide transition-all hover:opacity-90 disabled:opacity-50 mt-2"
+              style={{ backgroundColor: '#00FF87', color: '#0A0F0D' }}
             >
               {loading ? '⏳ Signing in...' : '🔐 Sign In'}
             </button>
           </form>
 
-          <div className="px-8 pb-6 text-center">
-            <Link href="/" className="text-sm font-semibold" style={{ color: '#1A6B3A' }}>
-              ← Back to GamFoot
+          <div className="px-6 pb-5 text-center">
+            <Link
+              href="/"
+              className="text-xs font-bold transition-all hover:text-white"
+              style={{ color: '#4A5C54' }}
+            >
+              Back to GamFoot
             </Link>
           </div>
+        </div>
+
+        {/* Footer */}
+        <div className="text-center mt-6">
+          <p className="text-xs" style={{ color: '#4A5C54' }}>
+            GamFoot · Built by TechPalz 🇬🇲
+          </p>
         </div>
       </div>
     </div>
