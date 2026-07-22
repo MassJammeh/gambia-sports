@@ -181,6 +181,14 @@ export default async function HomePage() {
           <div className="text-sm font-black" style={{ color: '#4A5C54' }}>
             GamFoot 🇬🇲 · Built by TechPalz
           </div>
+                  {/* Subtle admin access - small lock icon */}
+          <Link
+            href="/admin/login"
+            className="opacity-20 hover:opacity-60 transition-all"
+            title="Admin"
+          >
+            <span style={{ color: '#4A5C54', fontSize: '16px' }}>🔒</span>
+          </Link>
         </div>
       </div>
     </div>
