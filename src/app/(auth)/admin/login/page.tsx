@@ -11,21 +11,24 @@ export default function AdminLoginPage() {
   const [error, setError] = useState('')
 
   async function handleLogin(e: React.FormEvent) {
-    e.preventDefault()
-    setLoading(true)
-    setError('')
+  e.preventDefault()
+  setLoading(true)
+  setError('')
 
-    const supabase = createClient()
-    const { error } = await supabase.auth.signInWithPassword({ email, password })
+  const supabase = createClient()
+  const { data, error } = await supabase.auth.signInWithPassword({ email, password })
 
-    if (error) {
-      setError(error.message)
-      setLoading(false)
-      return
-    }
-
-    window.location.href = '/admin'
+  if (error) {
+    setError(error.message)
+    setLoading(false)
+    return
   }
+
+  if (data.session) {
+    // Force hard redirect to ensure cookies are set
+    window.location.replace('/admin')
+  }
+}
 
   return (
     <div

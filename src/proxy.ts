@@ -3,37 +3,35 @@ import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
 export async function proxy(request: NextRequest) {
-  const response = NextResponse.next({
+  let response = NextResponse.next({
     request: {
       headers: request.headers,
     },
   })
-
-  // Only check auth if there's a session cookie
-  const hasSession = request.cookies.has('sb-access-token') ||
-    request.cookies.getAll().some(c => c.name.includes('auth-token'))
-
-  if (!hasSession &&
-    request.nextUrl.pathname.startsWith('/admin') &&
-    !request.nextUrl.pathname.startsWith('/admin/login')) {
-    return NextResponse.redirect(new URL('/admin/login', request.url))
-  }
-
-  if (!hasSession) return response
 
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
       cookies: {
-        get(name) {
-          return request.cookies.get(name)?.value
+        getAll() {
+          return request.cookies.getAll()
         },
-        set(name, value, options) {
-          response.cookies.set({ name, value, ...options })
-        },
-        remove(name, options) {
-          response.cookies.set({ name, value: '', ...options })
+        setAll(cookiesToSet) {
+          cookiesToSet.forEach(({ name, value }) =>
+            request.cookies.set(name, value)
+          )
+          response = NextResponse.next({
+            request,
+          })
+          cookiesToSet.forEach(({ name, value, options }) =>
+            response.cookies.set(name, value, {
+              ...options,
+              sameSite: 'lax',
+              secure: true,
+              httpOnly: true,
+            })
+          )
         },
       },
     }
@@ -49,6 +47,14 @@ export async function proxy(request: NextRequest) {
     return NextResponse.redirect(new URL('/admin/login', request.url))
   }
 
+  if (
+    !user &&
+    request.nextUrl.pathname.startsWith('/community') &&
+    request.nextUrl.pathname.includes('/admin')
+  ) {
+    return NextResponse.redirect(new URL('/admin/login', request.url))
+  }
+
   if (user && request.nextUrl.pathname === '/admin/login') {
     return NextResponse.redirect(new URL('/admin', request.url))
   }
@@ -57,5 +63,5 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/admin/:path*'],
+  matcher: ['/admin/:path*', '/community/:path*/admin/:path*'],
 }
