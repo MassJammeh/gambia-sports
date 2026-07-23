@@ -1,71 +1,117 @@
 import { createClient } from '@/lib/supabase/server'
 
 export default async function NewsTicker() {
-  const supabase = await createClient()
+  try {
+    const supabase = await createClient()
 
-  const { data: results } = await supabase
-    .from('matches')
-    .select('*, home_team:teams!home_team_id(name), away_team:teams!away_team_id(name), tournament:tournaments(name, community_id)')
-    .eq('status', 'completed')
-    .order('scheduled_at', { ascending: false })
-    .limit(8)
+    const [
+      { data: liveMatches },
+      { data: recentResults },
+      { data: communities },
+    ] = await Promise.all([
+      supabase
+        .from('matches')
+        .select('*, home_team:teams!home_team_id(name), away_team:teams!away_team_id(name)')
+        .eq('status', 'live')
+        .limit(5),
+      supabase
+        .from('matches')
+        .select('*, home_team:teams!home_team_id(name), away_team:teams!away_team_id(name)')
+        .eq('status', 'completed')
+        .order('updated_at', { ascending: false })
+        .limit(8),
+      supabase
+        .from('communities')
+        .select('name')
+        .eq('status', 'active')
+        .limit(10),
+    ])
 
-  const { data: liveMatches } = await supabase
-    .from('matches')
-    .select('*, home_team:teams!home_team_id(name), away_team:teams!away_team_id(name)')
-    .eq('status', 'live')
-    .limit(5)
+    const items: string[] = []
 
-  const { data: communities } = await supabase
-    .from('communities')
-    .select('name')
-    .eq('status', 'active')
-    .limit(5)
+    liveMatches?.forEach((m) => {
+      items.push(`🔴 LIVE · ${(m.home_team as any)?.name} ${m.home_score} — ${m.away_score} ${(m.away_team as any)?.name} · ${m.minute}'`)
+    })
 
-  const items: string[] = []
+    recentResults?.forEach((m) => {
+      items.push(`⚽ FT · ${(m.home_team as any)?.name} ${m.home_score} — ${m.away_score} ${(m.away_team as any)?.name}`)
+    })
 
-  // Live matches first
-  liveMatches?.forEach((m) => {
-    items.push(`🔴 LIVE: ${(m.home_team as any)?.name} ${m.home_score} — ${m.away_score} ${(m.away_team as any)?.name} (${m.minute}')`)
-  })
+    communities?.forEach((c) => {
+      items.push(`🏟 ${c.name} Nawettan 2025 is underway`)
+    })
 
-  // Recent results
-  results?.forEach((m) => {
-    items.push(`⚽ FT: ${(m.home_team as any)?.name} ${m.home_score} — ${m.away_score} ${(m.away_team as any)?.name}`)
-  })
+    items.push('🇬🇲 Welcome to GamFoot — The home of Nawettan football in The Gambia')
+    items.push('⚡ Live scores updated in real-time across all communities')
+    items.push('🏆 Follow your community — Nawettan 2025 season is live')
 
-  // Community news
-  communities?.forEach((c) => {
-    items.push(`🏟 ${c.name} Nawettan 2025 is underway`)
-  })
+    if (items.length === 0) return null
 
-  items.push('🇬🇲 Welcome to GamFoot — The home of Nawettan football in The Gambia')
-  items.push('📱 Follow live scores for every community on GamFoot')
+    const tickerText = items.join('     ·     ')
 
-  if (items.length === 0) return null
-
-  const tickerText = items.join('   •••   ')
-
-  return (
-    <div
-      className="fixed bottom-0 left-0 right-0 z-50 flex items-center overflow-hidden"
-      style={{ backgroundColor: '#0F4A28', borderTop: '2px solid #C1272D', height: '36px' }}
-    >
+    return (
       <div
-        className="flex-shrink-0 flex items-center gap-1.5 px-4 h-full text-xs font-black uppercase tracking-widest"
-        style={{ backgroundColor: '#C1272D', color: 'white', borderRight: '2px solid rgba(255,255,255,0.2)' }}
+        className="fixed bottom-0 left-0 right-0 z-50 flex items-center overflow-hidden"
+        style={{
+          backgroundColor: '#0A0F0D',
+          borderTop: '1px solid #1F2B26',
+          height: '38px',
+        }}
       >
-        <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ backgroundColor: 'white' }} />
-        LIVE
-      </div>
-      <div className="flex-1 overflow-hidden">
+        {/* LIVE badge */}
         <div
-          className="whitespace-nowrap text-xs font-medium"
-          style={{ color: 'rgba(255,255,255,0.9)', animation: 'ticker 40s linear infinite' }}
+          className="flex-shrink-0 flex items-center gap-2 px-4 h-full"
+          style={{
+            backgroundColor: '#FF3B3B',
+            borderRight: '1px solid #FF3B3B50',
+          }}
         >
-          {tickerText}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{tickerText}
+          <div className="w-1.5 h-1.5 rounded-full animate-pulse bg-white" />
+          <span
+            className="text-xs font-black uppercase tracking-widest text-white"
+            style={{ letterSpacing: '0.15em' }}
+          >
+            LIVE
+          </span>
+        </div>
+
+        {/* Ticker text */}
+        <div className="flex-1 overflow-hidden px-2">
+          <div
+            className="whitespace-nowrap inline-block"
+            style={{
+              animation: 'ticker 60s linear infinite',
+              fontSize: '12px',
+              fontWeight: '700',
+              color: '#8A9E96',
+              letterSpacing: '0.02em',
+            }}
+          >
+            <span style={{ color: '#00FF87' }}>◆</span>
+            &nbsp;&nbsp;
+            {tickerText}
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <span style={{ color: '#00FF87' }}>◆</span>
+            &nbsp;&nbsp;
+            {tickerText}
+          </div>
+        </div>
+
+        {/* GamFoot brand */}
+        <div
+          className="flex-shrink-0 px-4 h-full flex items-center"
+          style={{ borderLeft: '1px solid #1F2B26' }}
+        >
+          <span
+            className="text-xs font-black uppercase tracking-widest"
+            style={{ color: '#00FF87', letterSpacing: '0.1em' }}
+          >
+            GamFoot
+          </span>
         </div>
       </div>
-    </div>
-  )
+    )
+  } catch {
+    return null
+  }
 }

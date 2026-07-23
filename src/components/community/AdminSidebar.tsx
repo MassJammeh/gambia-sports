@@ -7,9 +7,16 @@ import { useState } from 'react'
 export default function CommunityAdminSidebar({
   community,
   profile,
+  stats,
 }: {
   community: any
   profile: any
+  stats?: {
+    teams: number
+    players: number
+    matches: number
+    live: number
+  }
 }) {
   const pathname = usePathname()
   const slug = community.slug
@@ -30,18 +37,21 @@ export default function CommunityAdminSidebar({
       <aside
         className="hidden lg:flex flex-col transition-all duration-300 flex-shrink-0"
         style={{
-          width: collapsed ? '64px' : '220px',
+          width: collapsed ? '64px' : '240px',
           backgroundColor: '#0D1410',
           borderRight: '1px solid #1E2A24',
           minHeight: '100vh',
         }}
       >
         {/* Logo */}
-        <div className="px-4 py-4 flex items-center justify-between" style={{ borderBottom: '1px solid #1E2A24' }}>
+        <div className="px-4 py-4 flex items-center justify-between"
+          style={{ borderBottom: '1px solid #1E2A24' }}>
           {!collapsed && (
             <Link href={`/communities/${slug}`} className="flex items-center gap-2">
               <span className="text-lg">🇬🇲</span>
-              <span className="font-black text-sm uppercase tracking-widest" style={{ color: '#00FF87' }}>GamFoot</span>
+              <span className="font-black text-sm uppercase tracking-widest" style={{ color: '#00FF87' }}>
+                GamFoot
+              </span>
             </Link>
           )}
           <button onClick={() => setCollapsed(!collapsed)} className="ml-auto" style={{ color: '#4A5C54' }}>
@@ -55,7 +65,25 @@ export default function CommunityAdminSidebar({
             <div className="text-xs font-bold uppercase tracking-widest mb-0.5" style={{ color: '#4A5C54' }}>
               {profile?.role?.replace('_', ' ')}
             </div>
-            <div className="text-sm font-black truncate" style={{ color: '#F0F4F2' }}>{community.name}</div>
+            <div className="text-sm font-black truncate" style={{ color: '#F0F4F2' }}>
+              {community.name}
+            </div>
+            {community.location && (
+              <div className="text-xs mt-0.5 truncate" style={{ color: '#4A5C54' }}>
+                📍 {community.location}
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Live indicator */}
+        {!collapsed && stats && stats.live > 0 && (
+          <div className="px-4 py-2.5 flex items-center gap-2"
+            style={{ backgroundColor: '#2A0A0A', borderBottom: '1px solid #FF3B3B20' }}>
+            <div className="w-2 h-2 rounded-full animate-pulse" style={{ backgroundColor: '#FF3B3B' }} />
+            <span className="text-xs font-black" style={{ color: '#FF3B3B' }}>
+              {stats.live} Match{stats.live > 1 ? 'es' : ''} Live
+            </span>
           </div>
         )}
 
@@ -82,24 +110,51 @@ export default function CommunityAdminSidebar({
           })}
         </nav>
 
-        {/* Links */}
+        {/* Stats */}
+        {!collapsed && stats && (
+          <div className="px-4 py-4 space-y-2" style={{ borderTop: '1px solid #1E2A24' }}>
+            <div className="text-xs font-black uppercase tracking-widest mb-2" style={{ color: '#4A5C54' }}>
+              Community Stats
+            </div>
+            <div className="grid grid-cols-2 gap-2">
+              {[
+                { label: 'Teams', value: stats.teams, color: '#00FF87' },
+                { label: 'Players', value: stats.players, color: '#6B8CFF' },
+                { label: 'Matches', value: stats.matches, color: '#FF3B3B' },
+                { label: 'Live', value: stats.live, color: '#FF3B3B' },
+              ].map((stat) => (
+                <div key={stat.label} className="rounded-lg p-2 text-center"
+                  style={{ backgroundColor: '#1A2320' }}>
+                  <div className="text-sm font-black" style={{ color: stat.color }}>{stat.value}</div>
+                  <div className="text-xs" style={{ color: '#4A5C54' }}>{stat.label}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Bottom links */}
         <div className="px-2 py-4 space-y-0.5" style={{ borderTop: '1px solid #1E2A24' }}>
-          <Link
-            href={`/communities/${slug}`}
+          <Link href={`/communities/${slug}`}
             className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-xs font-bold transition-all"
-            style={{ color: '#4A5C54' }}
-          >
+            style={{ color: '#4A5C54' }}>
             <span>🌐</span>
             {!collapsed && 'Public Site'}
           </Link>
-          <Link
-            href="/admin"
+          <Link href="/admin"
             className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-xs font-bold transition-all"
-            style={{ color: '#4A5C54' }}
-          >
+            style={{ color: '#4A5C54' }}>
             <span>⚙️</span>
             {!collapsed && 'Super Admin'}
           </Link>
+          <form action="/api/admin/signout" method="POST">
+            <button type="submit"
+              className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-xs font-bold"
+              style={{ color: '#4A5C54' }}>
+              <span>🚪</span>
+              {!collapsed && 'Sign Out'}
+            </button>
+          </form>
         </div>
       </aside>
 
@@ -110,9 +165,22 @@ export default function CommunityAdminSidebar({
       >
         <Link href={`/communities/${slug}`} className="flex items-center gap-2">
           <span>🇬🇲</span>
-          <span className="font-black text-sm uppercase tracking-widest" style={{ color: '#00FF87' }}>GamFoot</span>
+          <span className="font-black text-sm uppercase tracking-widest" style={{ color: '#00FF87' }}>
+            GamFoot
+          </span>
         </Link>
-        <span className="text-xs font-bold" style={{ color: '#4A5C54' }}>{community.name} Admin</span>
+        <div className="flex items-center gap-3">
+          {stats && stats.live > 0 && (
+            <div className="flex items-center gap-1.5 px-2 py-1 rounded"
+              style={{ backgroundColor: '#2A0A0A' }}>
+              <div className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ backgroundColor: '#FF3B3B' }} />
+              <span className="text-xs font-black" style={{ color: '#FF3B3B' }}>{stats.live} Live</span>
+            </div>
+          )}
+          <span className="text-xs font-bold" style={{ color: '#4A5C54' }}>
+            {community.name}
+          </span>
+        </div>
       </div>
     </>
   )
