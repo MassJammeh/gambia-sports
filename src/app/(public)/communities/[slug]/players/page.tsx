@@ -114,7 +114,9 @@ export default async function CommunityPlayersPage({
                     {sortedSquad.map((player) => {
                       const config = positionConfig[player.position] ?? { color: '#4A5C54', bg: '#1A2320' }
                       return (
-                        <div key={player.id} className="px-5 py-3 flex items-center gap-4 transition-all hover:bg-white/5">
+                        <Link
+                          href={`/communities/${slug}/players/${player.id}`}
+                          key={player.id} className="px-5 py-3 flex items-center gap-4 transition-all hover:bg-white/5">
                           <div
                             className="w-8 h-8 rounded flex items-center justify-center font-black text-xs flex-shrink-0"
                             style={{ backgroundColor: config.bg, color: config.color }}
@@ -133,7 +135,7 @@ export default async function CommunityPlayersPage({
                           >
                             {player.position}
                           </span>
-                        </div>
+                        </Link>
                       )
                     })}
                   </div>
