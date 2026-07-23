@@ -115,21 +115,21 @@ export default function CommunityFixtureForm({
       )}
 
       {/* Stage */}
-      <div>
-        <label className="text-xs font-bold mb-1.5 block" style={{ color: '#4A5C54' }}>Stage</label>
-        <select value={stage} onChange={(e) => setStage(e.target.value)}
-          className="w-full px-3 py-2.5 rounded-lg text-xs outline-none font-bold"
-          style={{ backgroundColor: '#1A2320', color: '#F0F4F2', border: '1px solid #1F2B26' }}
-        >
-          <option value="group">Group Stage</option>
-          <option value="qualify_round">Qualify Round</option>
-          <option value="round_of_16">Round of 16</option>
-          <option value="quarter_final">Quarter Final</option>
-          <option value="semi_final">Semi Final</option>
-          <option value="final">Final</option>
-          <option value="third_place">Third Place</option>
-        </select>
-      </div>
+            <div>
+              <label className="text-xs font-bold mb-1.5 block" style={{ color: '#4A5C54' }}>Stage</label>
+              <select value={stage} onChange={(e) => setStage(e.target.value)}
+                className="w-full px-3 py-2.5 rounded-lg text-xs outline-none font-bold"
+                style={{ backgroundColor: '#1A2320', color: '#F0F4F2', border: '1px solid #1F2B26' }}
+              >
+                <option value="group">Group Stage</option>
+                <option value="qualify_round">Qualify Round</option>
+                <option value="round_of_16">Round of 16</option>
+                <option value="quarter_final">Quarter Final</option>
+                <option value="semi_final">Semi Final</option>
+                <option value="final">Final</option>
+                <option value="third_place">Third Place</option>
+              </select>
+            </div>
 
       {/* Home team */}
       <div>

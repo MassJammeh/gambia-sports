@@ -65,7 +65,23 @@ export default async function ManageTournamentPage({
         tournament={tournament}
         groups={groups ?? []}
       />
-
+          {/* Knockout Manager Link */}
+              {tournament.type === 'knockout' && (
+                <Link
+                  href={`/community/${slug}/admin/tournaments/${id}/knockout`}
+                  className="flex items-center justify-between px-5 py-4 rounded-xl transition-all hover:opacity-90"
+                  style={{ backgroundColor: '#0D3320', border: '1px solid #00FF8720' }}
+                >
+                  <div className="flex items-center gap-3">
+                    <span className="text-xl">🥊</span>
+                    <div>
+                      <div className="font-black text-sm" style={{ color: '#00FF87' }}>Knockout Bracket Manager</div>
+                      <div className="text-xs" style={{ color: '#4A5C54' }}>Schedule fixtures by stage</div>
+                    </div>
+                  </div>
+                  <span style={{ color: '#00FF87' }}>→</span>
+                </Link>
+              )}
       {/* Group team assignment */}
       {groups && groups.length > 0 && (
         <GroupTeamManager
