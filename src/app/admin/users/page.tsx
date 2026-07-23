@@ -43,12 +43,12 @@ export default async function AdminUsersPage() {
           </p>
         </div>
         <Link
-          href="/admin/users/invite"
-          className="px-5 py-2.5 rounded-xl text-sm font-black text-white transition-all hover:opacity-90"
-          style={{ backgroundColor: '#1A6B3A' }}
-        >
-          + Invite User
-        </Link>
+            href="/admin/users/create"
+            className="text-xs font-black px-4 py-2 rounded transition-all hover:opacity-90"
+            style={{ backgroundColor: '#00FF87', color: '#0A0F0D' }}
+          >
+            + Create User
+          </Link>
       </div>
 
       {/* Stats */}
