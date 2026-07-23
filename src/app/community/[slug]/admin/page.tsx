@@ -15,22 +15,26 @@ export default async function CommunityAdminDashboard({
   const supabase = await createClient()
 
   const [
-    { data: tournaments },
-    { data: recentResults },
-    { data: upcomingFixtures },
-    { count: teamCount },
-    { count: playerCount },
-    { count: matchCount },
-    { data: liveMatches },
-  ] = await Promise.all([
-    getTournamentsByCommunity(community.id),
-    getRecentResults(community.id, 5),
-    getUpcomingFixtures(community.id, 5),
-    supabase.from('teams').select('*', { count: 'exact', head: true }).eq('community_id', community.id).eq('status', 'active'),
-    supabase.from('players').select('*', { count: 'exact', head: true }).eq('community_id', community.id).eq('status', 'active'),
-    supabase.from('matches').select('*', { count: 'exact', head: true }).eq('community_id', community.id).eq('status', 'completed'),
-    supabase.from('matches').select('*, home_team:teams!home_team_id(name), away_team:teams!away_team_id(name)').eq('community_id', community.id).eq('status', 'live'),
-  ])
+  { data: tournaments },
+  { data: recentResults },
+  { data: upcomingFixtures },
+  { count: teamCount },
+  { count: playerCount },
+  { count: matchCount },
+  { data: liveMatches },
+  { count: scheduledCount },
+  { count: tournamentCount },
+] = await Promise.all([
+  getTournamentsByCommunity(community.id),
+  getRecentResults(community.id, 5),
+  getUpcomingFixtures(community.id, 5),
+  supabase.from('teams').select('*', { count: 'exact', head: true }).eq('community_id', community.id).eq('status', 'active'),
+  supabase.from('players').select('*', { count: 'exact', head: true }).eq('community_id', community.id).eq('status', 'active'),
+  supabase.from('matches').select('*', { count: 'exact', head: true }).eq('community_id', community.id).eq('status', 'completed'),
+  supabase.from('matches').select('*, home_team:teams!home_team_id(name), away_team:teams!away_team_id(name)').eq('community_id', community.id).eq('status', 'live'),
+  supabase.from('matches').select('*', { count: 'exact', head: true }).eq('community_id', community.id).eq('status', 'scheduled'),
+  supabase.from('tournaments').select('*', { count: 'exact', head: true }).eq('community_id', community.id),
+])
 
   const nawettan = tournaments?.find(t => t.type === 'nawettan')
   const knockout = tournaments?.find(t => t.type === 'knockout')
@@ -126,6 +130,72 @@ export default async function CommunityAdminDashboard({
           ))}
         </div>
       </div>
+
+      {/* Community Stats */}
+          <div>
+            <div className="text-xs font-black uppercase tracking-widest mb-3" style={{ color: '#4A5C54' }}>
+              Community Overview
+            </div>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+              {[
+                { label: 'Tournaments', value: tournamentCount ?? 0, color: '#F5A623', icon: '🏆' },
+                { label: 'Scheduled', value: scheduledCount ?? 0, color: '#6B8CFF', icon: '📅' },
+                { label: 'Teams', value: teamCount ?? 0, color: '#00FF87', icon: '🛡️' },
+                { label: 'Players', value: playerCount ?? 0, color: '#FF3B3B', icon: '👤' },
+              ].map((stat) => (
+                <div key={stat.label} className="rounded-xl p-4" style={{ backgroundColor: '#141A17', border: '1px solid #1F2B26' }}>
+                  <div className="text-xl mb-1">{stat.icon}</div>
+                  <div className="text-2xl font-black" style={{ color: stat.color }}>{stat.value}</div>
+                  <div className="text-xs font-bold uppercase tracking-wide mt-1" style={{ color: '#4A5C54' }}>{stat.label}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Activity Feed */}
+          <div className="rounded-xl overflow-hidden" style={{ backgroundColor: '#141A17', border: '1px solid #1F2B26' }}>
+            <div className="px-5 py-3 flex items-center gap-2" style={{ borderBottom: '1px solid #1F2B26' }}>
+              <div className="w-1 h-4 rounded-full" style={{ backgroundColor: '#F5A623' }} />
+              <span className="text-xs font-black uppercase tracking-widest" style={{ color: '#8A9E96' }}>
+                Community News & Activity
+              </span>
+            </div>
+            <div className="divide-y" style={{ borderColor: '#1F2B26' }}>
+              {/* Live matches */}
+              {liveMatches && liveMatches.length > 0 && liveMatches.map((match: any) => (
+                <div key={match.id} className="px-5 py-3 flex items-center gap-3">
+                  <div className="w-2 h-2 rounded-full animate-pulse flex-shrink-0" style={{ backgroundColor: '#FF3B3B' }} />
+                  <div className="flex-1 text-xs font-bold" style={{ color: '#F0F4F2' }}>
+                    🔴 LIVE: {match.home_team?.name} {match.home_score} — {match.away_score} {match.away_team?.name}
+                  </div>
+                  <span className="text-xs font-black" style={{ color: '#FF3B3B' }}>{match.minute}'</span>
+                </div>
+              ))}
+              {/* Recent results */}
+              {recentResults && recentResults.length > 0 ? recentResults.slice(0, 3).map((match) => (
+                <div key={match.id} className="px-5 py-3 flex items-center gap-3">
+                  <span className="text-base flex-shrink-0">⚽</span>
+                  <div className="flex-1 text-xs" style={{ color: '#8A9E96' }}>
+                    FT: {(match.home_team as any)?.name} {match.home_score} — {match.away_score} {(match.away_team as any)?.name}
+                  </div>
+                </div>
+              )) : (
+                <div className="px-5 py-4 text-xs" style={{ color: '#4A5C54' }}>
+                  No recent activity. Schedule your first fixture!
+                </div>
+              )}
+              {/* Upcoming */}
+              {upcomingFixtures && upcomingFixtures.length > 0 && (
+                <div className="px-5 py-3 flex items-center gap-3">
+                  <span className="text-base flex-shrink-0">📅</span>
+                  <div className="flex-1 text-xs" style={{ color: '#8A9E96' }}>
+                    Next match: {(upcomingFixtures[0].home_team as any)?.name} vs {(upcomingFixtures[0].away_team as any)?.name}
+                    {upcomingFixtures[0].scheduled_at && ` · ${new Date(upcomingFixtures[0].scheduled_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })}`}
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
 
       {/* Tournaments status */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

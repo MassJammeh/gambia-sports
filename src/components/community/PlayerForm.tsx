@@ -160,27 +160,44 @@ export default function CommunityPlayerForm({
             className="w-full px-3 py-2.5 rounded-lg text-xs outline-none font-bold"
             style={{ backgroundColor: '#1A2320', color: '#F0F4F2', border: '1px solid #1F2B26' }}
           >
-            <option value="active">Active</option>
-            <option value="inactive">Inactive</option>
-            <option value="retired">Retired</option>
+            <option value="active">✅ Active</option>
+            <option value="inactive">⏸️ Inactive</option>
+            <option value="injured">🤕 Injured</option>
+            <option value="on_loan">🔄 On Loan</option>
+            <option value="retired">🏁 Retired</option>
           </select>
         </div>
       )}
 
       <div className="flex gap-3 pt-2">
-        <a href={`/community/${communitySlug}/admin/players`}
-          className="flex-1 py-3 rounded-lg font-black text-xs uppercase tracking-wide text-center"
-          style={{ backgroundColor: '#1A2320', color: '#4A5C54' }}
-        >
-          Cancel
-        </a>
-        <button type="submit" disabled={loading}
-          className="flex-1 py-3 rounded-lg font-black text-xs uppercase tracking-wide disabled:opacity-50"
-          style={{ backgroundColor: '#00FF87', color: '#0A0F0D' }}
-        >
-          {loading ? 'Saving...' : isEdit ? 'Save Changes' : 'Add Player'}
-        </button>
-      </div>
+            <a href={`/community/${communitySlug}/admin/players`}
+              className="flex-1 py-3 rounded-lg font-black text-xs uppercase tracking-wide text-center"
+              style={{ backgroundColor: '#1A2320', color: '#4A5C54' }}
+            >
+              Cancel
+            </a>
+            {isEdit && (
+              <button
+                type="button"
+                onClick={async () => {
+                  if (!confirm('Delete this player? This cannot be undone.')) return
+                  const supabase = createClient()
+                  await supabase.from('players').delete().eq('id', player.id)
+                  window.location.href = `/community/${communitySlug}/admin/players`
+                }}
+                className="px-4 py-3 rounded-lg font-black text-xs uppercase tracking-wide"
+                style={{ backgroundColor: '#2A0A0A', color: '#FF3B3B' }}
+              >
+                Delete
+              </button>
+            )}
+            <button type="submit" disabled={loading}
+              className="flex-1 py-3 rounded-lg font-black text-xs uppercase tracking-wide disabled:opacity-50"
+              style={{ backgroundColor: '#00FF87', color: '#0A0F0D' }}
+            >
+              {loading ? 'Saving...' : isEdit ? 'Save Changes' : 'Add Player'}
+            </button>
+          </div>
     </form>
   )
 }
