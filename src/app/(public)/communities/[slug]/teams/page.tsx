@@ -44,11 +44,12 @@ export default async function CommunityTeamsPage({
       ) : (
         <div className="rounded-xl overflow-hidden" style={{ backgroundColor: '#141A17', border: '1px solid #1F2B26' }}>
           {teams.map((team, index) => (
-            <div
-              key={team.id}
-              className="px-5 py-4 flex items-center gap-4 transition-all hover:bg-white/5"
-              style={{ borderBottom: index < teams.length - 1 ? '1px solid #1F2B26' : 'none' }}
-            >
+            <Link
+                key={team.id}
+                href={`/communities/${slug}/teams/${team.slug || team.id}`}
+                className="px-5 py-4 flex items-center gap-4 transition-all hover:bg-white/5 block"
+                style={{ borderBottom: index < teams.length - 1 ? '1px solid #1F2B26' : 'none' }}
+              >
               <div
                 className="w-10 h-10 rounded-lg flex items-center justify-center font-black text-base flex-shrink-0"
                 style={{ backgroundColor: '#0D3320', color: '#00FF87', border: '1px solid #00C96815' }}
@@ -74,7 +75,7 @@ export default async function CommunityTeamsPage({
                   Active
                 </span>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
       )}
