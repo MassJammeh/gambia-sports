@@ -203,12 +203,13 @@ export default async function CommunityPage({
 
       {/* Quick Nav */}
       <div className="grid grid-cols-4 gap-3">
-        {[
-          { href: `/communities/${slug}/nawettan`, icon: '🏆', label: 'Nawettan', color: '#FF3B3B' },
-          { href: `/communities/${slug}/knockout`, icon: '🥊', label: 'Knockout', color: '#6B8CFF' },
-          { href: `/communities/${slug}/teams`, icon: '🛡️', label: 'Teams', color: '#00FF87' },
-          { href: `/communities/${slug}/players`, icon: '👤', label: 'Players', color: '#F5A623' },
-        ].map((item) => (
+          {[
+            { href: `/communities/${slug}/nawettan`, icon: '🏆', label: 'Nawettan', color: '#C1272D' },
+            { href: `/communities/${slug}/knockout`, icon: '🥊', label: 'Knockout', color: '#6B8CFF' },
+            { href: `/communities/${slug}/matches`, icon: '⚽', label: 'Live Scores', color: '#FF3B3B' },
+            { href: `/communities/${slug}/teams`, icon: '🛡️', label: 'Teams', color: '#00FF87' },
+            { href: `/communities/${slug}/players`, icon: '👤', label: 'Players', color: '#F5A623' },
+          ].map((item) => (
           <Link key={item.href} href={item.href}
             className="rounded-xl py-4 text-center transition-all hover:scale-[1.02]"
             style={{ backgroundColor: '#141A17', border: '1px solid #1F2B26' }}
