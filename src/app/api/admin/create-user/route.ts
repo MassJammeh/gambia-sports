@@ -38,7 +38,7 @@ export async function POST(request: Request) {
     const { data: newUser, error: createError } = await adminSupabase.auth.admin.inviteUserByEmail(
       email,
       {
-        redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL ?? 'https://gambia-sports-wine.vercel.app'}/admin/login`,
+        redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL ?? 'https://gambia-sports-wine.vercel.app'}/auth/confirm`,
         data: {
           display_name: displayName || null,
         }
