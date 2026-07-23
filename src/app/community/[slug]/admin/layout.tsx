@@ -1,6 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import CommunityAdminSidebar from '@/components/community/AdminSidebar'
+import InactivityLogout from '@/components/admin/InactivityLogout'
 
 export default async function CommunityAdminLayout({
   children,
@@ -45,11 +46,12 @@ export default async function CommunityAdminLayout({
   }
 
   return (
-    <div className="min-h-screen flex" style={{ backgroundColor: '#0A0F0D' }}>
-      <CommunityAdminSidebar community={community} profile={profile} />
-      <main className="flex-1 p-6 lg:p-8 overflow-auto lg:mt-0 mt-14">
-        {children}
-      </main>
-    </div>
-  )
+  <div className="min-h-screen flex" style={{ backgroundColor: '#0A0F0D' }}>
+    <InactivityLogout />
+    <CommunityAdminSidebar community={community} profile={profile} />
+    <main className="flex-1 p-6 lg:p-8 overflow-auto lg:mt-0 mt-14">
+      {children}
+    </main>
+  </div>
+)
 }

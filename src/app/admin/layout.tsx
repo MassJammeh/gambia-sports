@@ -1,6 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import AdminSidebar from '@/components/admin/AdminSidebar'
+import InactivityLogout from '@/components/admin/InactivityLogout'
 
 export default async function AdminLayout({
   children,
@@ -26,6 +27,7 @@ export default async function AdminLayout({
 
   return (
     <div className="min-h-screen flex" style={{ backgroundColor: '#0A0F0D' }}>
+      <InactivityLogout />
       <AdminSidebar profile={profile} />
       <main className="flex-1 p-6 lg:p-8 overflow-auto lg:mt-0 mt-14">
         {children}
